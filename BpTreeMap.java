@@ -255,10 +255,26 @@ public class BpTreeMap <K extends Comparable <K>, V>
         var enSet = new HashSet <Map.Entry <K, V>> ();
 
         //  T O   B E   I M P L E M E N T E D
-            
+        traverse_helper(root, enSet);
         return enSet;
     } // entrySet
-
+    private void traverse_helper(BpTreeMap<K, V>.Node node, Set<Map.Entry<K, V>> entrySet) {
+        if (node != null) {
+            // If node is a leaf, add its entries to the set
+            if (node.isLeaf) {
+                for (int i = 0; i < node.keys; i++) {
+                    K key = node.key[i];
+                    V value = (V) node.ref[i + 1];
+                    entrySet.add(new AbstractMap.SimpleEntry<>(key, value));
+                }
+            } else {
+                // If node is an internal node, recursively traverse its children
+                for (int i = 0; i <= node.keys; i++) {
+                    traverse_helper((BpTreeMap<K, V>.Node) node.ref[i], entrySet);
+                }
+            }
+        }
+    }
     /********************************************************************************
      * Given the key, look up the value in the B+Tree map.
      * @param key  the key used for look up
@@ -341,6 +357,14 @@ public class BpTreeMap <K extends Comparable <K>, V>
             if (DEBUG) out.println ("insert: handle internal node level");
 
                 //  T O   B E   I M P L E M E N T E D
+            if(rt != null){
+                if (n.overflow()) { // If the internal node overflows, split it
+                    rt = addI(n, rt.key[0], rt);
+                    if (rt != null) { // If the root node splits, update the root
+                        root = new Node(root, rt.key[0], rt);
+                    }
+                }
+            }
 
         } // if
 
@@ -375,10 +399,12 @@ public class BpTreeMap <K extends Comparable <K>, V>
         Node rt = null;                                               // holder for right sibling rt
 
                 //  T O   B E   I M P L E M E N T E D
+        n.add(k,v);
+        if(n.overflow()) rt = n.splitI();
 
         return rt;
     } // addI
-    
+
 //-----------------------------------------------------------------------------------
 // Print/show the B+Tree
 //-----------------------------------------------------------------------------------
