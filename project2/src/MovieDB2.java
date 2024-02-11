@@ -4,7 +4,7 @@
  *
  * @author   John Miller
  */
-package project1;
+
 import static java.lang.System.out;
 
 /*****************************************************************************************

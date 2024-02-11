@@ -22,7 +22,6 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
 
-import static java.lang.Math.ceil;
 import static java.lang.System.out;
 
 /************************************************************************************

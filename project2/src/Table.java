@@ -1,5 +1,3 @@
-package project1;
-
 /****************************************************************************************
  * @file  Table.java
  *
@@ -18,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 
-import static java.lang.Boolean.*;
 import static java.lang.System.arraycopy;
 import static java.lang.System.out;
 import java.util.regex.Matcher;
@@ -79,7 +76,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.NO_MAP;
+    private static final MapType mType = MapType.HASH_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -99,7 +96,7 @@ public class Table
     /************************************************************************************
      * Concatenate two arrays of type T to form a new wider array.
      *
-     * @see http://stackoverflow.com/questions/80476/how-to-concatenate-two-arrays-in-java
+     * @see "https://stackoverflow.com/questions/80476/how-to-concatenate-two-arrays-in-java"
      *
      * @param arr1  the first array
      * @param arr2  the second array
@@ -132,6 +129,7 @@ public class Table
         key       = _key;
         tuples    = new ArrayList <> ();
         index     = makeMap ();
+        out.println("Index:"+ index);
     } // constructor
 
     /************************************************************************************
@@ -363,6 +361,7 @@ public class Table
         List <Comparable []> rows = new ArrayList <> ();
 
         //  T O   B E   I M P L E M E N T E D  - Project 2
+        out.println();
 
         return new Table (name + count++, attribute, domain, key, rows);
     } // select
@@ -382,14 +381,28 @@ public class Table
         if (! compatible (table2)) return null;
 
         List <Comparable []> rows = new ArrayList <> ();
+        if((mType == MapType.NO_MAP || table2.mType == MapType.NO_MAP) ){
+            //  T O   B E   I M P L E M E N T E D
+            for (int i = 0; i < tuples.size(); i++) {
+                rows.add(tuples.get(i).clone());
+            }
+            for (int i = 0; i < table2.tuples.size(); i++) {
+                rows.add(table2.tuples.get(i).clone());
+            }
+            return new Table (name + count++, attribute, domain, key, rows);
+        }
+        // Indexing for the union
 
-        //  T O   B E   I M P L E M E N T E D
-        for(int i=0;i<tuples.size();i++){
-            rows.add(tuples.get(i).clone());
+        // Iterate the keys of index of table 1
+        for (var entry : index.entrySet()) {
+            rows.add(entry.getValue()); // Insert directly from index
         }
-        for(int i=0;i<table2.tuples.size();i++){
-            rows.add(table2.tuples.get(i).clone());
+        //Iterate the keys of index of table 2
+        for (var entry : table2.index.entrySet()) {
+            rows.add(entry.getValue()); // Insert directly from index
         }
+
+
         return new Table (name + count++, attribute, domain, key, rows);
     } // union
 

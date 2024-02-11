@@ -1,4 +1,3 @@
-package project1;
 /*****************************************************************************************
  * @file  MovieDB.java
  *
@@ -51,6 +50,7 @@ class MovieDB
         movie.insert (film2);
         movie.insert (film3);
         movie.print ();
+        movie.printIndex();
 
         var film4 = new Comparable [] { "Galaxy_Quest", 1999, 104, "comedy", "DreamWorks", 67890 };
         out.println ();
@@ -58,6 +58,11 @@ class MovieDB
         cinema.insert (film3);
         cinema.insert (film4);
         cinema.print ();
+        cinema.printIndex();
+        movie.printIndex();
+        Table uniont = movie.union(cinema);
+        uniont.print();
+
 
         var star0 = new Comparable [] { "Carrie_Fisher", "Hollywood", 'F', "9/9/99" };
         var star1 = new Comparable [] { "Mark_Hamill", "Brentwood", 'M', "8/8/88" };
