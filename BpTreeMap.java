@@ -361,7 +361,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
                 if (n.overflow()) { // If the internal node overflows, split it
                     rt = addI(n, rt.key[0], rt);
                     if (rt != null) { // If the root node splits, update the root
-                        root = new Node(root, rt.key[0], rt);
+                       if(root == n) {
+                           root = new Node(root, rt.key[0], rt);
+                       }
+
                     }
                 }
             }
@@ -461,6 +464,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
         for (var i = 0; i <= totalKeys; i++) {
             out.println (STR."key = \{i}, value = \{bpt.get (i)}");
         } // for
+        bpt.printT(bpt.root,0);
         out.println ("-------------------------------------------");
         out.println (STR."number of keys in BpTree = \{bpt.kCount}");
         out.println ("-------------------------------------------");
