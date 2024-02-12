@@ -628,10 +628,48 @@ public class Table
     public Table i_join (String attributes1, String attributes2, Table table2)
     {
         //  T O   B E   I M P L E M E N T E D  - Project 2
+        out.println (STR."RA> \{name}.join (\{attributes1}, \{attributes2}, \{table2.name})");
 
-        return null;
+        var t_attrs = attributes1.split (" ");
+        var u_attrs = attributes2.split (" ");
+        var rows    = new ArrayList <Comparable []> ();
+//        System.out.println(index);
+//        System.out.println(key);
+
+
+        int[] primarykeyattributes=new int[key.length];
+
+        int count=0;
+        for(int i=0;i<attribute.length;i++){
+            for(int j=0;j<t_attrs.length;j++) {
+                if (attribute[i].equals(t_attrs[j])) {
+                    primarykeyattributes[count++]= i;
+                    break;
+                }
+            }
+
+        }
+
+        for(int i=0;i<tuples.size();i++){
+            var combinedkeyval = new Comparable [primarykeyattributes.length];
+            for (int j=0;j<primarykeyattributes.length;j++) {
+                combinedkeyval[j]=tuples.get(i)[primarykeyattributes[j]];
+            }
+
+//            out.println(table2.index.get(new KeyType(combinedkeyval)));
+            var lookupvalue=table2.index.get(new KeyType(combinedkeyval));
+            if(lookupvalue!=null){
+                rows.add(concat(tuples.get(i),lookupvalue));
+            }
+//            out.println(table2.index);
+//            out.println("=++++++++++++++++++++++++++++++++++++++++++++++");
+        }
+        return new Table (name + count++, concat (attribute, table2.attribute),
+                concat (domain, table2.domain), key, rows);
+
 
     } // i_join
+
 
     /************************************************************************************
      * Join this table and table2 by performing an NATURAL JOIN.  Tuples from both tables

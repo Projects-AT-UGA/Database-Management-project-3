@@ -165,6 +165,15 @@ class MovieDB
         out.println ();
         var t_join3 =movie.join ("studioName == name", studio);
         t_join3.print();
+
+
+        //---------------------- i join : movie
+        out.println ();
+        var t_join4=movie.i_join ("title year", "title year", cinema);
+        t_join4.print();
+        //is default primary key that was created during the creation of table
+        // same as attributes1 and attributes2
+
     } // main
 
 } // MovieDB class
