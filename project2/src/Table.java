@@ -362,7 +362,8 @@ public class Table
 
         //  T O   B E   I M P L E M E N T E D  - Project 2
         out.println();
-
+        var v = index.get(keyVal);
+        rows.add(v);
         return new Table (name + count++, attribute, domain, key, rows);
     } // select
 
