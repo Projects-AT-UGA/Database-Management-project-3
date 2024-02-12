@@ -76,7 +76,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.BPTREE_MAP;
+    private static final MapType mType = MapType.LINHASH_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -396,6 +396,7 @@ public class Table
 
         // Iterate the keys of index of table 1
         for (var entry : index.entrySet()) {
+            out.println(entry.getKey()+" "+entry.getValue());
             rows.add(entry.getValue()); // Insert directly from index
         }
         //Iterate the keys of index of table 2

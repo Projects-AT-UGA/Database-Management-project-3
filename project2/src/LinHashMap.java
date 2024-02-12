@@ -154,7 +154,19 @@ public class LinHashMap <K, V>
         var enSet = new HashSet <Map.Entry <K, V>> ();
 
         //  T O   B E   I M P L E M E N T E D
-            
+
+        for(int i=0;i<hTable.size();i++){
+
+            for(int j=0;j<hTable.get(i).key.length;j++){
+                if(hTable.get(i).key[j]!=null){
+                    enSet.add(new AbstractMap.SimpleEntry<K, V>(hTable.get(i).key[j],hTable.get(i).value[j]));
+
+                }
+
+            }
+
+        }
+
         return enSet;
     } // entrySet
 
@@ -163,14 +175,14 @@ public class LinHashMap <K, V>
      * @param key  the key to hash
      * @return  the location of the bucket chain containing the key-value pair
      */
-    private int h (Object key) { return key.hashCode () % mod1; }
+    private int h (Object key) { return Math.abs(key.hashCode () % mod1); }
 
     /********************************************************************************
      * Hash the key using the high resolution hash function.
      * @param key  the key to hash
      * @return  the location of the bucket chain containing the key-value pair
      */
-    private int h2 (Object key) { return key.hashCode () % mod2; }
+    private int h2 (Object key) { return Math.abs(key.hashCode () % mod2); }
 
     /********************************************************************************
      * Given the key, look up the value in the hash table.
@@ -247,7 +259,7 @@ public class LinHashMap <K, V>
     {
         out.println ("split: bucket chain " + isplit);
 
-        //  T O   B E   I M P L E M E N T E D
+            //  T O   B E   I M P L E M E N T E D
 
     } // split
 
