@@ -76,7 +76,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.HASH_MAP;
+    private static final MapType mType = MapType.BPTREE_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -87,8 +87,8 @@ public class Table
         case NO_MAP      -> null;
         case TREE_MAP    -> new TreeMap <> ();
         case HASH_MAP    -> new HashMap <> ();
-//        case LINHASH_MAP -> new LinHashMap <> (KeyType.class, Comparable [].class);
-//        case BPTREE_MAP  -> new BpTreeMap <> (KeyType.class, Comparable [].class);
+        case LINHASH_MAP -> new LinHashMap <> (KeyType.class, Comparable [].class);
+        case BPTREE_MAP  -> new BpTreeMap <> (KeyType.class, Comparable [].class);
         default          -> null;
         }; // switch
     } // makeMap
@@ -845,6 +845,7 @@ public class Table
             var cols   = match (key);
             for (var j = 0; j < keyVal.length; j++) keyVal [j] = tup [cols [j]];
             if (mType != MapType.NO_MAP) index.put (new KeyType (keyVal), tup);
+
             return true;
         } else {
             return false;
@@ -895,6 +896,7 @@ public class Table
         out.println ("-------------------");
         if (mType != MapType.NO_MAP) {
             for (var e : index.entrySet ()) {
+
                 out.println (STR."\{e.getKey ()} -> \{Arrays.toString (e.getValue ())}");
             } // for
         } // if
@@ -928,6 +930,7 @@ public class Table
      */
     public void save ()
     {
+
         try {
 
             Path relativePath = Paths.get(System.getProperty("user.dir")).resolve("store");
@@ -936,6 +939,7 @@ public class Table
             oos.writeObject (this);
             oos.close ();
         } catch (IOException ex) {
+
             out.println ("save: IO Exception");
             out.println(ex.getMessage());
             ex.printStackTrace ();

@@ -100,7 +100,6 @@ class MovieDB
         studio.save ();
 
         movieStar.printIndex ();
-
         //--------------------- project: title year
 
         out.println ();
