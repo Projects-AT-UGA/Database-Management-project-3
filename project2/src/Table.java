@@ -399,8 +399,11 @@ public class Table
         }
         //Iterate the keys of index of table 2
         for (var entry : table2.index.entrySet()) {
-            rows.add(entry.getValue()); // Insert directly from index
+           if(!index.containsKey(entry.getKey())) {
+               rows.add(entry.getValue()); // Insert directly from index
+           }
         }
+
 
 
         return new Table (name + count++, attribute, domain, key, rows);
