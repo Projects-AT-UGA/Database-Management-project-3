@@ -48,7 +48,7 @@ public class LinHashMap <K, V>
     /********************************************************************************
      * The `Bucket` inner class defines buckets that are stored in the hash table.
      */
-    private class Bucket
+    private class Bucket implements Serializable
     {
         int    keys;                                                         // number of active keys
         K []   key;                                                          // array of keys
@@ -236,6 +236,7 @@ public class LinHashMap <K, V>
         var lf = loadFactor ();                                              // compute the load factor
         if (DEBUG) out.println (STR."put: load factor = \{lf}");
         if (lf > THRESHOLD) split ();                                        // split beyond THRESHOLD
+        bh = hTable.get(i);
 
         var b = bh;
         while (true) {
@@ -259,7 +260,46 @@ public class LinHashMap <K, V>
     {
         out.println ("split: bucket chain " + isplit);
 
-            //  T O   B E   I M P L E M E N T E D
+        //  T O   B E   I M P L E M E N T E D
+        List <Bucket> newhTable=new ArrayList<>(hTable);
+
+        isplit=mod2-mod1; //return the other elements other than mod 1
+
+
+        hTable.clear();
+
+        for (var i = 0; i < mod2; i++) hTable.add (new Bucket ());
+
+        for(int i=0;i<newhTable.size();i++){
+            var curr=newhTable.get(i);
+            while(curr!=null) {
+                for (int j = 0; j < curr.keys; j++) {
+                    int newhash = h2(curr.key[j]);
+                    var b=hTable.get(newhash);
+                    while (true) {
+                        if (b.keys < SLOTS) {
+                            b.add(curr.key[j], curr.value[j]);
+                            break;
+                        }
+                        if (b.next != null) {
+                            b = b.next;
+                        } else{
+                            b.next=new Bucket();
+                            b=b.next;
+                            b.add(curr.key[j], curr.value[j]);
+                            break;
+                        }
+                    }
+                }
+                curr = curr.next;
+            }
+        }
+
+        if (isplit == mod1) {
+            isplit = 0;
+            mod1 *= 2;
+            mod2 = 2 * mod1;
+        }
 
     } // split
 
