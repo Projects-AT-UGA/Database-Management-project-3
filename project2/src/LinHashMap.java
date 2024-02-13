@@ -236,7 +236,9 @@ public class LinHashMap <K, V>
         var lf = loadFactor ();                                              // compute the load factor
         if (DEBUG) out.println (STR."put: load factor = \{lf}");
         if (lf > THRESHOLD) split ();                                        // split beyond THRESHOLD
-        bh = hTable.get(i);
+        i    = h (key);                                                  // hash to i-th bucket chain
+        bh   = hTable.get (i);
+        oldV = find (key, bh, false);
 
         var b = bh;
         while (true) {
