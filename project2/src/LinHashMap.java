@@ -48,7 +48,7 @@ public class LinHashMap <K, V>
     /********************************************************************************
      * The `Bucket` inner class defines buckets that are stored in the hash table.
      */
-    private class Bucket implements Serializable
+    private class Bucket
     {
         int    keys;                                                         // number of active keys
         K []   key;                                                          // array of keys
@@ -175,14 +175,14 @@ public class LinHashMap <K, V>
      * @param key  the key to hash
      * @return  the location of the bucket chain containing the key-value pair
      */
-    private int h (Object key) { return Math.abs(key.hashCode () % mod1); }
+    private int h (Object key) { return key.hashCode () % mod1; }
 
     /********************************************************************************
      * Hash the key using the high resolution hash function.
      * @param key  the key to hash
      * @return  the location of the bucket chain containing the key-value pair
      */
-    private int h2 (Object key) { return Math.abs(key.hashCode () % mod2); }
+    private int h2 (Object key) { return key.hashCode () % mod2; }
 
     /********************************************************************************
      * Given the key, look up the value in the hash table.
@@ -235,10 +235,15 @@ public class LinHashMap <K, V>
         kCount += 1;                                                         // increment the key count
         var lf = loadFactor ();                                              // compute the load factor
         if (DEBUG) out.println (STR."put: load factor = \{lf}");
-        if (lf > THRESHOLD) split ();                                        // split beyond THRESHOLD
-        i    = h (key);                                                  // hash to i-th bucket chain
-        bh   = hTable.get (i);
-        oldV = find (key, bh, false);
+        if (lf > THRESHOLD) {
+            System.out.println("========================before split==================1");
+            this.printT();
+            System.out.println("========================before split==================2");
+            split ();
+            System.out.println("========================after split==================1");
+            this.printT();
+            System.out.println("========================after split==================2");
+        };                                        // split beyond THRESHOLD
 
         var b = bh;
         while (true) {
@@ -251,7 +256,12 @@ public class LinHashMap <K, V>
         b.next = bn;                                                         // add new bucket at end of chain
         return oldV;
     } // put
-
+    private void printBucket(Bucket curr){
+        while(curr!=null){
+            curr.print();
+            curr=curr.next;
+        }
+    }
     /********************************************************************************
      * Split bucket chain 'isplit' by creating a new bucket chain at the end of the
      * hash table and redistributing the keys according to the high resolution hash
@@ -263,46 +273,49 @@ public class LinHashMap <K, V>
         out.println ("split: bucket chain " + isplit);
 
         //  T O   B E   I M P L E M E N T E D
-        List <Bucket> newhTable=new ArrayList<>(hTable);
 
-        isplit=mod2-mod1; //return the other elements other than mod 1
+        var currBucketToSplit=hTable.get(isplit); //get the bucket to split
+        hTable.set(isplit, new Bucket());//replace the bucket to split place with a new bucket
 
+        hTable.add(new Bucket());//add a new bucket to end
 
-        hTable.clear();
-
-        for (var i = 0; i < mod2; i++) hTable.add (new Bucket ());
-
-        for(int i=0;i<newhTable.size();i++){
-            var curr=newhTable.get(i);
-            while(curr!=null) {
-                for (int j = 0; j < curr.keys; j++) {
-                    int newhash = h2(curr.key[j]);
-                    var b=hTable.get(newhash);
-                    while (true) {
-                        if (b.keys < SLOTS) {
-                            b.add(curr.key[j], curr.value[j]);
-                            break;
-                        }
-                        if (b.next != null) {
-                            b = b.next;
-                        } else{
-                            b.next=new Bucket();
-                            b=b.next;
-                            b.add(curr.key[j], curr.value[j]);
-                            break;
-                        }
+        printBucket(currBucketToSplit);
+        out.println();
+        out.println(mod1+" "+ mod2+ " "+isplit);
+        while(currBucketToSplit!=null){
+            for(int i=0;i<currBucketToSplit.keys;i++){
+                out.println(currBucketToSplit.key[i]);
+                int new_buket_index=h2(currBucketToSplit.key[i]);
+                var bukettoadd=hTable.get(new_buket_index);
+                boolean added=false;
+                var prev=bukettoadd;
+                while(bukettoadd!=null){
+                    if(bukettoadd.keys<SLOTS){
+                        bukettoadd.add(currBucketToSplit.key[i],currBucketToSplit.value[i]);
+                        added=true;break;
                     }
+                    prev=bukettoadd;
+                    bukettoadd=bukettoadd.next;
                 }
-                curr = curr.next;
+                if(!added){
+                    prev.next=new Bucket();
+                    prev.next.add (currBucketToSplit.key[i],currBucketToSplit.value[i]);
+                }
             }
+            currBucketToSplit=currBucketToSplit.next;
         }
 
+        printBucket(currBucketToSplit);
+        out.println();
+
+
+        isplit++;
         if (isplit == mod1) {
+
             isplit = 0;
             mod1 *= 2;
             mod2 = 2 * mod1;
         }
-
     } // split
 
 //-----------------------------------------------------------------------------------
@@ -340,7 +353,7 @@ public class LinHashMap <K, V>
      */
     public static void main (String [] args)
     {
-        var totalKeys = 40;
+        var totalKeys = 100;
         var RANDOMLY  = false;
 
         LinHashMap <Integer, Integer> ht = new LinHashMap <> (Integer.class, Integer.class);
@@ -350,7 +363,7 @@ public class LinHashMap <K, V>
             var rng = new Random ();
             for (var i = 1; i <= totalKeys; i += 2) ht.put (rng.nextInt (2 * totalKeys), i * i);
         } else {
-            for (var i = 1; i <= totalKeys; i += 2) ht.put (i, i * i);
+            for (var i = 1; i <= totalKeys; i +=1) ht.put (i, i * i);
         } // if
 
         ht.printT ();
