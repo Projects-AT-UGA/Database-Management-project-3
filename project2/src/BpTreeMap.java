@@ -38,7 +38,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
         implements Serializable, Cloneable // , SortedMap <K, V>
 {
     private static final boolean DEBUG = true;                        // debug flag
-
+    private K temp;
     private static final int ORDER = 5;                               // maximum number of children for a B+Tree node.
     private static final int HALF  = (ORDER - 1) / 2;                 // half of max keys (floor)
     private static final int HALFP = ORDER - HALF;                    // rest of the keys (half plus)
@@ -349,7 +349,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
 //                out.println("++++++++++++++++inside else condition");
                 out.println("value of n++++++++++++++++"+n);
 
-                var temp=n.key[HALF];
+
                 rt=addI(n, rt.key[0], rt);
 
                 if(rt!=null){
@@ -401,9 +401,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
 
         //  T O   B E   I M P L E M E N T E D
         n.add (k, v);
+
         out.println("inaddi--------------"+n);
         if (n.overflow ()) {
-
+            temp=n.key[HALF];
             rt = n.splitI ();
         }
         return rt;
@@ -449,7 +450,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public static void main (String [] args)
     {
-        var totalKeys = 12;
+        var totalKeys = 30;
         var RANDOMLY  = false;
         var bpt       = new BpTreeMap <Integer, Integer> (Integer.class, Integer.class);
         if (args.length == 1) totalKeys = Integer.valueOf (args[0]);
@@ -458,7 +459,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
             Random rng = new Random ();
             for (var i = 1; i <= totalKeys; i += 2) bpt.put (rng.nextInt (2 * totalKeys), i * i);
         } else {
-            for (var i = totalKeys; i >= 0; i -= 1) bpt.put (i, i * i);
+            for (var i = 0; i <= totalKeys; i += 1) bpt.put (i, i * i);
         } // if
 
         bpt.printT (bpt.root, 0);
