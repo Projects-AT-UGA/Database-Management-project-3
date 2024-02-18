@@ -21,8 +21,8 @@
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
-import java.io.Serializable;
 
+import static java.lang.Math.ceil;
 import static java.lang.System.out;
 
 /************************************************************************************
@@ -34,8 +34,8 @@ import static java.lang.System.out;
  * while keys in right subtree are ">=".
  */
 public class BpTreeMap <K extends Comparable <K>, V>
-       extends AbstractMap <K, V>
-       implements Serializable, Cloneable // , SortedMap <K, V>
+        extends AbstractMap <K, V>
+        implements Serializable, Cloneable // , SortedMap <K, V>
 {
     private static final boolean DEBUG = true;                        // debug flag
 
@@ -59,7 +59,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * Internal:  r0 -> subtree with keys < k0; r1 -> subtree with keys in [k0, k1); etc.
      * Split:     extra room in nodes allows the overflow key to be inserted before split
      */
-    private class Node implements Serializable
+    private class Node
     {
         boolean   isLeaf;                                             // whether the node is a leaf 
         int       keys;                                               // number of active keys
@@ -78,7 +78,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
             keys   = keys_;
             key    = (K []) Array.newInstance (classK, ORDER);
             ref = (isLeaf) ? new Object [ORDER + 1]
-                           : (Node []) Array.newInstance (Node.class, ORDER + 1);
+                    : (Node []) Array.newInstance (Node.class, ORDER + 1);
         } // constructor
 
         /****************************************************************************
@@ -230,10 +230,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
     /********************************************************************************
      * Return null to use the natural order based on the key type.  This requires the
      * key type to implement Comparable.
-    public Comparator <? super K> comparator () 
-    {
-        return null;
-    } // comparator
+     public Comparator <? super K> comparator ()
+     {
+     return null;
+     } // comparator
      */
 
     /********************************************************************************
@@ -255,26 +255,10 @@ public class BpTreeMap <K extends Comparable <K>, V>
         var enSet = new HashSet <Map.Entry <K, V>> ();
 
         //  T O   B E   I M P L E M E N T E D
-        traverse_helper(root, enSet);
+
         return enSet;
     } // entrySet
-    private void traverse_helper(BpTreeMap<K, V>.Node node, Set<Map.Entry<K, V>> entrySet) {
-        if (node != null) {
-            // If node is a leaf, add its entries to the set
-            if (node.isLeaf) {
-                for (int i = 0; i < node.keys; i++) {
-                    K key = node.key[i];
-                    V value = (V) node.ref[i + 1];
-                    entrySet.add(new AbstractMap.SimpleEntry<>(key, value));
-                }
-            } else {
-                // If node is an internal node, recursively traverse its children
-                for (int i = 0; i <= node.keys; i++) {
-                    traverse_helper((BpTreeMap<K, V>.Node) node.ref[i], entrySet);
-                }
-            }
-        }
-    }
+
     /********************************************************************************
      * Given the key, look up the value in the B+Tree map.
      * @param key  the key used for look up
@@ -294,7 +278,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
     {
         var np = findp (key, root);                                   // leaf node, index position
         return (np.pos >= 0) ? (V) ((Node) np.node).ref[np.pos+1]
-                             : (V) null;
+                : (V) null;
     } // find
 
     /********************************************************************************
@@ -306,7 +290,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
     {
         count += 1;
         return (n.isLeaf) ? new NodePos (n, n.findEq (key))
-                          : findp (key, (Node) n.ref[n.find (key)]);
+                : findp (key, (Node) n.ref[n.find (key)]);
     } // findp
 
 //-----------------------------------------------------------------------------------
@@ -334,7 +318,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * @param key  the key to insert
      * @param ref  the value/node to insert
      * @param n    the current node
-     * @return  the newly allocated right sibling node of n 
+     * @return  the newly allocated right sibling node of n
      */
     @SuppressWarnings("unchecked")
     private Node insert (K key, V ref, Node n)
@@ -355,19 +339,33 @@ public class BpTreeMap <K extends Comparable <K>, V>
         } else {                                                      // handle INTERNAL node level
             rt = insert (key, ref, (Node) n.ref[n.find (key)]);       // recursive call to insert
             if (DEBUG) out.println ("insert: handle internal node level");
+            //  T O   B E   I M P L E M E N T E D
 
-                //  T O   B E   I M P L E M E N T E D
-            if(rt != null){
-                if (n.overflow()) { // If the internal node overflows, split it
-                    rt = addI(n, rt.key[0], rt);
-                    if (rt != null) { // If the root node splits, update the root
-                       if(root == n) {
-                           root = new Node(root, rt.key[0], rt);
-                       }
+            if(rt==null){
 
-                    }
+                return null;
+            }
+            else{
+//                out.println("++++++++++++++++inside else condition");
+                out.println("value of n++++++++++++++++"+n);
+
+                var temp=n.key[HALF];
+                rt=addI(n, rt.key[0], rt);
+
+                if(rt!=null){
+//                    out.println("rt is null++++++++++++++++"+n);
+//                }
+//                else{
+
+//                    rt.ref[0]=n.ref[n.keys];
+//                    n.ref[n.keys]=null;
+                    root = new Node (root, temp, rt);
+                    out.println("value of n++++++++++++++++"+n);
+                    out.println("value of rt++++++++++++++++"+rt);
                 }
             }
+
+
 
         } // if
 
@@ -401,10 +399,13 @@ public class BpTreeMap <K extends Comparable <K>, V>
     {
         Node rt = null;                                               // holder for right sibling rt
 
-                //  T O   B E   I M P L E M E N T E D
-        n.add(k,v);
-        if(n.overflow()) rt = n.splitI();
+        //  T O   B E   I M P L E M E N T E D
+        n.add (k, v);
+        out.println("inaddi--------------"+n);
+        if (n.overflow ()) {
 
+            rt = n.splitI ();
+        }
         return rt;
     } // addI
 
@@ -448,23 +449,22 @@ public class BpTreeMap <K extends Comparable <K>, V>
      */
     public static void main (String [] args)
     {
-        var totalKeys = 30;                    
+        var totalKeys = 12;
         var RANDOMLY  = false;
         var bpt       = new BpTreeMap <Integer, Integer> (Integer.class, Integer.class);
         if (args.length == 1) totalKeys = Integer.valueOf (args[0]);
-   
+
         if (RANDOMLY) {
             Random rng = new Random ();
             for (var i = 1; i <= totalKeys; i += 2) bpt.put (rng.nextInt (2 * totalKeys), i * i);
         } else {
-            for (var i = 1; i <= totalKeys; i += 2) bpt.put (i, i * i);
+            for (var i = totalKeys; i >= 0; i -= 1) bpt.put (i, i * i);
         } // if
 
         bpt.printT (bpt.root, 0);
         for (var i = 0; i <= totalKeys; i++) {
             out.println (STR."key = \{i}, value = \{bpt.get (i)}");
         } // for
-        bpt.printT(bpt.root,0);
         out.println ("-------------------------------------------");
         out.println (STR."number of keys in BpTree = \{bpt.kCount}");
         out.println ("-------------------------------------------");
