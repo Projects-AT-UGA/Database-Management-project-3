@@ -200,6 +200,7 @@ public class LinHashMap <K, V>
     {
         var i = h (key);
         // FIX for high resolution
+
         return find ((K) key, hTable.get (i), true);
     } // get
 
@@ -249,6 +250,10 @@ public class LinHashMap <K, V>
             System.out.println("========================after split==================1");
             this.printT();
             System.out.println("========================after split==================2");
+            i    = h (key);                                                  // hash to i-th bucket chain
+            bh   = hTable.get (i);                                           // start with home bucket
+            oldV = find (key, bh, false);                                    // find old value associated with key
+
         };                                        // split beyond THRESHOLD
 
         var b = bh;
@@ -360,7 +365,7 @@ public class LinHashMap <K, V>
      */
     public static void main (String [] args)
     {
-        var totalKeys = 30;
+        var totalKeys = 1000;
         var RANDOMLY  = false;
 
         LinHashMap <Integer, Integer> ht = new LinHashMap <> (Integer.class, Integer.class);
@@ -370,12 +375,15 @@ public class LinHashMap <K, V>
             var rng = new Random ();
             for (var i = 1; i <= totalKeys; i += 2) ht.put (rng.nextInt (2 * totalKeys), i * i);
         } else {
-            for (var i = 1; i <= totalKeys; i +=2) ht.put (i, i * i);
+            for (var i = 1; i <= totalKeys; i +=1) ht.put (i, i * i);
         } // if
 
         ht.printT ();
-        for (var i = 0; i <= totalKeys; i++) {
+        for (var i = 1; i <= totalKeys; i++) {
             out.println (STR."key = \{i}, value = \{ht.get (i)}");
+            if(ht.get(i)==null){
+                out.println("===============================something went wrong");
+            }
         } // for
         out.println ("-------------------------------------------");
         out.println (STR."Average number of buckets accessed = \{ht.count / (double) totalKeys}");
