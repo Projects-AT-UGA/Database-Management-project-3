@@ -175,8 +175,14 @@ public class LinHashMap <K, V>
      * @param key  the key to hash
      * @return  the location of the bucket chain containing the key-value pair
      */
-    private int h (Object key) { return key.hashCode () % mod1; }
-
+    private int h (Object key) {
+        var i=h1(key);
+        if(i<isplit){
+            return h2(key);
+        }
+        return i;
+    }
+    private int h1 (Object key) { return key.hashCode () % mod1; }
     /********************************************************************************
      * Hash the key using the high resolution hash function.
      * @param key  the key to hash
@@ -281,7 +287,7 @@ public class LinHashMap <K, V>
 
         printBucket(currBucketToSplit);
         out.println();
-        out.println(mod1+" "+ mod2+ " "+isplit);
+        out.println("MOD1="+mod1+" ,,,,MOD2="+ mod2+ " ,,,ISSPLIT="+isplit);
         while(currBucketToSplit!=null){
             for(int i=0;i<currBucketToSplit.keys;i++){
                 out.println(currBucketToSplit.key[i]);
@@ -316,6 +322,7 @@ public class LinHashMap <K, V>
             mod1 *= 2;
             mod2 = 2 * mod1;
         }
+        out.println("MOD1="+mod1+" ,,,,MOD2="+ mod2+ " ,,,ISSPLIT="+isplit);
     } // split
 
 //-----------------------------------------------------------------------------------
@@ -353,7 +360,7 @@ public class LinHashMap <K, V>
      */
     public static void main (String [] args)
     {
-        var totalKeys = 100;
+        var totalKeys = 30;
         var RANDOMLY  = false;
 
         LinHashMap <Integer, Integer> ht = new LinHashMap <> (Integer.class, Integer.class);
@@ -363,7 +370,7 @@ public class LinHashMap <K, V>
             var rng = new Random ();
             for (var i = 1; i <= totalKeys; i += 2) ht.put (rng.nextInt (2 * totalKeys), i * i);
         } else {
-            for (var i = 1; i <= totalKeys; i +=1) ht.put (i, i * i);
+            for (var i = 1; i <= totalKeys; i +=2) ht.put (i, i * i);
         } // if
 
         ht.printT ();
