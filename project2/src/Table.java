@@ -76,7 +76,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.LINHASH_MAP;
+    private static final MapType mType = MapType.BPTREE_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -782,12 +782,20 @@ public class Table
         List<String> commonAttributesAmongTables = find_common_attributes(table2);
 
 
-        if(commonAttributesAmongTables.isEmpty()){
-            //We can not perform join here as there's no attribute to compute join upon
-            out.println(STR."RA>Error: Can not perform join on tables as \{name} and \{table2.name} have no matching attribute(s)");
-            return new Table (name + count++, concat (attribute, table2.attribute),
-                    concat (domain, table2.domain), key, rows);
-        }
+        // Step 2: If there are no common attributes, perform cartesian product
+        if (commonAttributesAmongTables.isEmpty()) {
+            for (int i = 0; i < tuples.size(); i++) {
+                for (int j = 0; j < table2.tuples.size(); j++) {
+                    Comparable[] tuple1 = tuples.get(i);
+                    Comparable[] tuple2 = table2.tuples.get(j);
+                    Comparable[] combinedTuple = new Comparable[tuple1.length + tuple2.length];
+                    System.arraycopy(tuple1, 0, combinedTuple, 0, tuple1.length);
+                    System.arraycopy(tuple2, 0, combinedTuple, tuple1.length, tuple2.length);
+                    rows.add(combinedTuple);
+                }
+            }
+        } else {
+            // Step 3: Perform natural join on common attributes
 
         for (int i = 0; i < tuples.size(); i++) {
             var tuple1 = tuples.get(i);
@@ -819,8 +827,9 @@ public class Table
 
             }
         }
+        }
 
-        // eliminate duplicate columns names to show in the table column
+        // Step 4: Eliminate duplicate columns names to show in the table column
         String[] combinedAttributes = delete_duplicate_attributes(commonAttributesAmongTables, table2.attribute);
 
         return new Table (name + count++, combinedAttributes,

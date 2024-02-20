@@ -59,7 +59,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
      * Internal:  r0 -> subtree with keys < k0; r1 -> subtree with keys in [k0, k1); etc.
      * Split:     extra room in nodes allows the overflow key to be inserted before split
      */
-    private class Node
+    private class Node implements Serializable
     {
         boolean   isLeaf;                                             // whether the node is a leaf 
         int       keys;                                               // number of active keys
