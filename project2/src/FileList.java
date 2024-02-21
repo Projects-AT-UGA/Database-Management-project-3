@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class FileList
        extends AbstractList <Comparable []>
-       implements List <Comparable []>, RandomAccess
+       implements List <Comparable []>, RandomAccess,Serializable
 {
     /** File extension for data files.
      */
@@ -24,7 +24,7 @@ public class FileList
 
     /** The random access file that holds the tuples.
      */
-    private RandomAccessFile file;
+    private transient RandomAccessFile file;
 
     /** The name of table.
      */
@@ -37,24 +37,71 @@ public class FileList
     /** Counter for the number of tuples in this list.
      */
     private int nRecords = 0;
+    private int length_of_file = 0;
+    private int actual_byte = 0;
 
     /***************************************************************************
      * Construct a FileList.
      * @param _tableName   the name of the table
      * @param _recordSize  the size of tuple in bytes.
      */
-    public FileList (String _tableName, int _recordSize)
-    {
-        tableName  = _tableName;
-        recordSize = _recordSize;
+     public FileList(String _tableName, int _recordSize) {
+        this.tableName = _tableName;
+        this.recordSize = _recordSize;
 
         try {
-            file = new RandomAccessFile (tableName + EXT, "rw");
-        } catch (FileNotFoundException ex) {
-            file = null;
-            out.println ("FileList.constructor: unable to open - " + ex);
-        } // try
-    } // constructor
+            this.file = new RandomAccessFile(this.tableName + ".dat", "rw");
+            this.file.seek(0L);
+        } catch (Exception var4) {
+            this.file = null;
+            System.out.println("FileList.constructor: unable to open - " + String.valueOf(var4));
+        }
+
+    }
+ private byte[] pack(Comparable[] tuple) {
+        byte[] fixedBytes = new byte[this.recordSize];
+
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(tuple);
+            oos.flush();
+            if (bos.size() < this.recordSize) {
+                System.out.println(bos.size());
+                byte[] garbageBytes = new byte[this.recordSize - bos.size() - 2];
+                oos.write(garbageBytes);
+                oos.flush();
+//                System.out.println(garbageBytes.length);
+//                System.out.println(bos.size());
+//                System.out.println(bos.toByteArray().length);
+            }
+
+            if (bos.size() > this.recordSize) {
+                throw new Exception("The byte size of tuple is more than record size please increase the size of record");
+            } else {
+                return bos.toByteArray();
+            }
+        } catch (Exception var6) {
+            System.out.println(var6);
+            return fixedBytes;
+        }
+    }
+
+    private Comparable[] unpack(byte[] packedBytes) {
+        try {
+//            System.out.println("Getting the object");
+//            System.out.println(packedBytes.length);
+            ByteArrayInputStream bis = new ByteArrayInputStream(packedBytes);
+            ObjectInputStream ois = new ObjectInputStream(bis);
+//            System.out.println(bis.available());
+            Object o = ois.readObject();
+            return (Comparable[])o;
+        } catch (Exception var5) {
+//            System.out.println(var5.getMessage());
+            var5.printStackTrace();
+            return null;
+        }
+    }
 
     /***************************************************************************
      * Add a new tuple into the file list by packing it into a record and writing
@@ -63,21 +110,26 @@ public class FileList
      * @param tuple  the tuple to add
      * @return  whether the addition succeeded
      */
-    public boolean add (Comparable [] tuple)
-    {
-        byte [] record = null;  // FIX: table.pack (tuple);
-
-        if (record.length != recordSize) {
-            out.println ("FileList.add: wrong record size " + record.length);
+    public boolean add(Comparable[] tuple) {
+        byte[] record = this.pack(tuple);
+        if (record.length != this.recordSize) {
+//            System.out.println(record);
+//            System.out.println("Record Size:" + this.recordSize);
+//            System.out.println("FileList.add: wrong record size " + record.length);
             return false;
-        } // if
-
-             //-----------------\\
-            // TO BE IMPLEMENTED \\
-           //---------------------\\
-
-        return true;
-    } // add
+        } else {
+            try {
+                this.file.seek((long)this.length_of_file);
+                this.file.write(record);
+                this.length_of_file += record.length;
+                ++this.nRecords;
+                return true;
+            } catch (IOException var4) {
+                System.out.println("FileList.add: error writing record - " + String.valueOf(var4));
+                return false;
+            }
+        }
+    }
 
     /***************************************************************************
      * Get the ith tuple by seeking to the correct file position and reading the
@@ -85,36 +137,37 @@ public class FileList
      * @param i  the index of the tuple to get
      * @return  the ith tuple
      */
-    public Comparable [] get (int i)
-    {
-        var record = new byte [recordSize];
+   public Comparable[] get(int i) {
+        byte[] record = new byte[this.recordSize];
 
-             //-----------------\\
-            // TO BE IMPLEMENTED \\
-           //---------------------\\
-
-        return null;   // FIX: table.unpack (record);
-    } // get
-
+        try {
+//            System.out.println(i);
+            this.file.seek((long)(i * this.recordSize));
+            this.file.read(record);
+            return this.unpack(record);
+        } catch (IOException var4) {
+            System.out.println("FileList.get: error reading record - " + String.valueOf(var4));
+            return null;
+        }
+    }
     /***************************************************************************
      * Return the size of the file list in terms of the number of tuples/records.
      * @return  the number of tuples
      */
-    public int size ()
-    {
-        return nRecords;
+    public int size() {
+        return this.nRecords;
     } // size
 
     /***************************************************************************
      * Close the file.
      */
-    public void close ()
-    {
+    public void close() {
         try {
-            file.close ();
-        } catch (IOException ex) {
-            out.println ("FileList.close: unable to close - " + ex);
-        } // try
+            this.file.close();
+        } catch (IOException var2) {
+            System.out.println("FileList.close: unable to close - " + String.valueOf(var2));
+        }
+
     } // close
 
 } // FileList class

@@ -76,7 +76,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.BPTREE_MAP;
+    private static final MapType mType = MapType.HASH_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -127,7 +127,8 @@ public class Table
         attribute = _attribute;
         domain    = _domain;
         key       = _key;
-        tuples    = new ArrayList <> ();
+//        tuples    = new ArrayList <> ();
+        tuples    = new FileList(_name, 300);
         index     = makeMap ();
         out.println("Index:"+ index);
     } // constructor
