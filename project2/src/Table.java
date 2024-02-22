@@ -76,7 +76,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.HASH_MAP;
+    private static final MapType mType = MapType.NO_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -362,9 +362,15 @@ public class Table
         List <Comparable []> rows = new ArrayList <> ();
 
         //  T O   B E   I M P L E M E N T E D  - Project 2
-        out.println();
-        var v = index.get(keyVal);
-        rows.add(v);
+        if((mType == MapType.NO_MAP ) ) {
+            out.println("TO SEARCH WITH A KEYVAL YOU NEED TO USE A MAP");
+        }
+        else{
+            out.println();
+            var v = index.get(keyVal);
+            rows.add(v);
+
+        }
         return new Table (name + count++, attribute, domain, key, rows);
     } // select
 
@@ -648,10 +654,15 @@ public class Table
     {
         //  T O   B E   I M P L E M E N T E D  - Project 2
         out.println (STR."RA> \{name}.join (\{attributes1}, \{attributes2}, \{table2.name})");
-
+        var rows    = new ArrayList <Comparable []> ();
+        if((mType == MapType.NO_MAP ) ) {
+            out.println("TO DO A IJOIN PLEASE USE A MAP TO USE INDEXING");
+            return new Table (name + count++, concat (attribute, table2.attribute),
+                    concat (domain, table2.domain), key, rows);
+        }
         var t_attrs = attributes1.split (" ");
         var u_attrs = attributes2.split (" ");
-        var rows    = new ArrayList <Comparable []> ();
+
 //        System.out.println(index);
 //        System.out.println(key);
 
