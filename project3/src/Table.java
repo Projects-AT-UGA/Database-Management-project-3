@@ -357,13 +357,13 @@ public class Table
      */
     public Table select (KeyType keyVal)
     {
-        out.println (STR."RA> \{name}.select (\{keyVal})");
+//        out.println (STR."RA> \{name}.select (\{keyVal})");
 
         List <Comparable []> rows = new ArrayList <> ();
 
         //  T O   B E   I M P L E M E N T E D  - Project 2
         if((mType == MapType.NO_MAP ) ) {
-            out.println("TO SEARCH WITH A KEYVAL YOU NEED TO USE A MAP");
+//            out.println("TO SEARCH WITH A KEYVAL YOU NEED TO USE A MAP");
         }
         else{
             out.println();
@@ -873,7 +873,7 @@ public class Table
      */
     public boolean insert (Comparable [] tup)
     {
-        out.println (STR."DML> insert into \{name} values (\{Arrays.toString (tup)})");
+//        out.println (STR."DML> insert into \{name} values (\{Arrays.toString (tup)})");
 
         if (typeCheck (tup)) {
             tuples.add (tup);

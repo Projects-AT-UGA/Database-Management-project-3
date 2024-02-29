@@ -173,6 +173,88 @@ class MovieDB
         //is default primary key that was created during the creation of table
         // same as attributes1 and attributes2
 
+
+    //----------------select testing by vishal -------------------//
+
+
+
+        var test = new TupleGeneratorImpl ();
+
+
+        out.println ();
+
+        test.addRelSchema ("movie",
+                "title year length genre studioName producerNo",
+                "String Integer Integer String String Integer",
+                "title year",
+                null);
+        var tups   = new int [] { 1000000 };//inserting 1000000 random values
+        var resultTest = test.generate (tups);
+        var movie1 = new Table ("movie", "title year length genre studioName producerNo",
+                "String Integer Integer String String Integer", "title year");
+
+        for (var i = 0; i < resultTest.length; i++) {
+            for (var j = 0; j < resultTest [i].length; j++) {
+                var tempfilm=new Comparable[resultTest [i][j].length];
+                int count=0;
+                for (var k = 0; k < resultTest [i][j].length; k++) {
+                    out.print (resultTest [i][j][k] + ",");
+                    tempfilm[count++]=resultTest [i][j][k];
+                } // for
+                movie1.insert(tempfilm);
+                out.println ();
+            } // for
+            out.println ();
+        } // for
+
+        long nano_startTime1 = System.nanoTime();
+        for(var i=0;i<1000000;i++){
+            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
+        }
+        long nano_endTime1 = System.nanoTime();
+        System.out.println("Time taken in seconds: "
+                + (nano_endTime1 - nano_startTime1)/1000000000d);
+
+
+
+        long nano_startTime2 = System.nanoTime();
+        for(var i=0;i<2000000;i++){
+            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
+        }
+        long nano_endTime2 = System.nanoTime();
+        System.out.println("Time taken in seconds: "
+                + (nano_endTime2 - nano_startTime2)/1000000000d);
+
+
+        long nano_startTime3 = System.nanoTime();
+        for(var i=0;i<3000000;i++){
+            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
+        }
+        long nano_endTime3 = System.nanoTime();
+        System.out.println("Time taken in seconds: "
+                + (nano_endTime3 - nano_startTime3)/1000000000d);
+
+        long nano_startTime4 = System.nanoTime();
+        for(var i=0;i<4000000;i++){
+            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
+        }
+        long nano_endTime4 = System.nanoTime();
+        System.out.println("Time taken in seconds: "
+                + (nano_endTime4 - nano_startTime4)/1000000000d);
+
+
+        long nano_startTime5 = System.nanoTime();
+        for(var i=0;i<5000000;i++){
+            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
+        }
+        long nano_endTime5 = System.nanoTime();
+        System.out.println("Time taken in seconds: "
+                + (nano_endTime5 - nano_startTime5)/1000000000d);
+
+
+
+
+//        movie1.print();
     } // main
 
 } // MovieDB class

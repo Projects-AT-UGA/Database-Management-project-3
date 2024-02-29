@@ -56,7 +56,7 @@ public class TestTupleGenerator
                                             { "crsCode semester", "Teaching", "crsCode semester" }});
 
         var tables = new String [] { "Student", "Professor", "Course", "Teaching", "Transcript" };
-        var tups   = new int [] { 10000, 1000, 2000, 50000, 5000 };
+        var tups   = new int [] { 10, 10, 20, 50, 50 };
     
         var resultTest = test.generate (tups);
         
