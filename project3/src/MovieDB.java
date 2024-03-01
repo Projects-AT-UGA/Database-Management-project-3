@@ -174,21 +174,21 @@ class MovieDB
         // same as attributes1 and attributes2
 
 
-    //----------------select testing by vishal -------------------//
+    //----------------select1 testing by vishal -------------------//
 
 
 
         var test = new TupleGeneratorImpl ();
 
 
-        out.println ();
+//        out.println ();
 
         test.addRelSchema ("movie",
                 "title year length genre studioName producerNo",
                 "String Integer Integer String String Integer",
                 "title year",
                 null);
-        var tups   = new int [] { 1000000 };//inserting 1000000 random values
+        var tups   = new int [] { 10000 };//inserting 10000 random values
         var resultTest = test.generate (tups);
         var movie1 = new Table ("movie", "title year length genre studioName producerNo",
                 "String Integer Integer String String Integer", "title year");
@@ -198,64 +198,43 @@ class MovieDB
                 var tempfilm=new Comparable[resultTest [i][j].length];
                 int count=0;
                 for (var k = 0; k < resultTest [i][j].length; k++) {
-                    out.print (resultTest [i][j][k] + ",");
-                    tempfilm[count++]=resultTest [i][j][k];
+//                    out.print (resultTest [i][j][k] + ","); //printing the generated random values
+                    tempfilm[count++]=resultTest [i][j][k]; //adding the generated random values
                 } // for
                 movie1.insert(tempfilm);
-                out.println ();
+//                out.println ();
             } // for
             out.println ();
         } // for
+        var quantity_of_select=10000000;
 
-        long nano_startTime1 = System.nanoTime();
-        for(var i=0;i<1000000;i++){
-            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
-        }
-        long nano_endTime1 = System.nanoTime();
-        System.out.println("Time taken in seconds: "
-                + (nano_endTime1 - nano_startTime1)/1000000000d);
-
+        runselect( quantity_of_select,movie1,5);
+        runselect( quantity_of_select*2,movie1,5);
+        runselect( quantity_of_select*3,movie1,5);
+        runselect( quantity_of_select*4,movie1,5);
+        runselect( quantity_of_select*5,movie1,5);
 
 
-        long nano_startTime2 = System.nanoTime();
-        for(var i=0;i<2000000;i++){
-            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
-        }
-        long nano_endTime2 = System.nanoTime();
-        System.out.println("Time taken in seconds: "
-                + (nano_endTime2 - nano_startTime2)/1000000000d);
-
-
-        long nano_startTime3 = System.nanoTime();
-        for(var i=0;i<3000000;i++){
-            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
-        }
-        long nano_endTime3 = System.nanoTime();
-        System.out.println("Time taken in seconds: "
-                + (nano_endTime3 - nano_startTime3)/1000000000d);
-
-        long nano_startTime4 = System.nanoTime();
-        for(var i=0;i<4000000;i++){
-            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
-        }
-        long nano_endTime4 = System.nanoTime();
-        System.out.println("Time taken in seconds: "
-                + (nano_endTime4 - nano_startTime4)/1000000000d);
-
-
-        long nano_startTime5 = System.nanoTime();
-        for(var i=0;i<5000000;i++){
-            var temprun = movie1.select (new KeyType ("Harrison_Ford"));
-        }
-        long nano_endTime5 = System.nanoTime();
-        System.out.println("Time taken in seconds: "
-                + (nano_endTime5 - nano_startTime5)/1000000000d);
 
 
 
 
 //        movie1.print();
     } // main
+    public static  void runselect(int quantity_of_select,Table movie1,int num_of_runs){
+        double time=0;
+        for(int j=0;j<num_of_runs+1;j++){
+            long nano_startTime = System.nanoTime();
+            for(var i=0;i<quantity_of_select;i++){
+                var temprun = movie1.select (new KeyType ("title781454 567896"));//command we run
+            }
+            long nano_endTime = System.nanoTime();
+            if(j>0){
+                time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
+            }
+        }
+       out.println("Time taken in seconds: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+    }
 
 } // MovieDB class
 

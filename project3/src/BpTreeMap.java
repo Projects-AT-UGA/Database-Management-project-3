@@ -340,9 +340,9 @@ public class BpTreeMap <K extends Comparable <K>, V>
     @SuppressWarnings("unchecked")
     private Node insert (K key, V ref, Node n)
     {
-        out.println ("=============================================================");
-        out.println (STR."insert: key \{key}");
-        out.println ("=============================================================");
+//        out.println ("=============================================================");
+//        out.println (STR."insert: key \{key}");
+//        out.println ("=============================================================");
 
         Node rt = null;                                               // holder right sibling node
 
@@ -355,7 +355,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
 
         } else {                                                      // handle INTERNAL node level
             rt = insert (key, ref, (Node) n.ref[n.find (key)]);       // recursive call to insert
-            if (DEBUG) out.println ("insert: handle internal node level");
+//            if (DEBUG) out.println ("insert: handle internal node level");
             //  T O   B E   I M P L E M E N T E D
 
             if(rt==null){
@@ -364,7 +364,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
             }
             else{
 //                out.println("++++++++++++++++inside else condition");
-                out.println("value of n++++++++++++++++"+n);
+//                out.println("value of n++++++++++++++++"+n);
 
 
                 rt=addI(n, rt.key[0], rt);
@@ -377,8 +377,8 @@ public class BpTreeMap <K extends Comparable <K>, V>
 //                    rt.ref[0]=n.ref[n.keys];
 //                    n.ref[n.keys]=null;
                     root = new Node (root, temp, rt);
-                    out.println("value of n++++++++++++++++"+n);
-                    out.println("value of rt++++++++++++++++"+rt);
+//                    out.println("value of n++++++++++++++++"+n);
+//                    out.println("value of rt++++++++++++++++"+rt);
                 }
             }
 
@@ -386,7 +386,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
 
         } // if
 
-        if (DEBUG) printT (root, 0);
+//        if (DEBUG) printT (root, 0);
         return rt;                                                    // return right sibling node
     } // insert
 
@@ -419,7 +419,7 @@ public class BpTreeMap <K extends Comparable <K>, V>
         //  T O   B E   I M P L E M E N T E D
         n.add (k, v);
 
-        out.println("inaddi--------------"+n);
+//        out.println("inaddi--------------"+n);
         if (n.overflow ()) {
             temp=n.key[HALF];
             rt = n.splitI ();

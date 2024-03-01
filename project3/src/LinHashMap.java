@@ -31,7 +31,7 @@ public class LinHashMap <K, V>
 
     /** The threshold/upper bound on the load factor
      */
-    private static final double THRESHOLD = 1.1;
+    private static final double THRESHOLD = 0.6;
 
     /** The class for type K.
      */

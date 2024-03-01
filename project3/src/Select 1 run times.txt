@@ -1,0 +1,47 @@
+var tups   = new int [] { 10000 };//inserting 10000 random values
+
+case 1 quantity_of_select=10000000  average for 5 iterations
+case 2 quantity_of_select=20000000  average for 5 iterations
+case 3 quantity_of_select=30000000  average for 5 iterations
+case 4 quantity_of_select=40000000  average for 5 iterations
+case 5 quantity_of_select=50000000  average for 5 iterations
+
+
+NO_MAP
+Time taken in seconds: 0.23826
+Time taken in seconds: 0.42925
+Time taken in seconds: 0.64976
+Time taken in seconds: 0.86790
+Time taken in seconds: 1.08922
+
+
+TREE_MAP
+Time taken in seconds: 1.13759
+Time taken in seconds: 2.28114
+Time taken in seconds: 3.44993
+Time taken in seconds: 4.57518
+Time taken in seconds: 5.71964
+
+
+HASH_MAP
+Time taken in seconds: 0.30731
+Time taken in seconds: 0.56937
+Time taken in seconds: 0.85247
+Time taken in seconds: 1.13646
+Time taken in seconds: 1.42401
+
+
+LINHASH_MAP
+Time taken in seconds: 0.74405
+Time taken in seconds: 1.50961
+Time taken in seconds: 2.27297
+Time taken in seconds: 3.05691
+Time taken in seconds: 3.80990
+
+
+BPTREE_MAP
+Time taken in seconds: 0.76775
+Time taken in seconds: 1.51684
+Time taken in seconds: 2.32810
+Time taken in seconds: 3.11145
+Time taken in seconds: 3.87678

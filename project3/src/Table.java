@@ -366,7 +366,7 @@ public class Table
 //            out.println("TO SEARCH WITH A KEYVAL YOU NEED TO USE A MAP");
         }
         else{
-            out.println();
+//            out.println();
             var v = index.get(keyVal);
             rows.add(v);
 
