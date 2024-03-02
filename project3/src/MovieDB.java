@@ -224,6 +224,13 @@ class MovieDB
         runselect( quantity_of_select*3,movie1,5);
         runselect( quantity_of_select*4,movie1,5);
         runselect( quantity_of_select*5,movie1,5);
+        runselect( quantity_of_select*6,movie1,5);
+        runselect( quantity_of_select*7,movie1,5);
+        runselect( quantity_of_select*8,movie1,5);
+        runselect( quantity_of_select*9,movie1,5);
+        runselect( quantity_of_select*10,movie1,5);
+
+
         out.println();
 //----------------i_join1 testing by vishal -------------------//
         var quantity_of_joins=10000;
@@ -232,6 +239,11 @@ class MovieDB
         runjoin( quantity_of_joins*3,movie1,cinema1,"title year",5);
         runjoin( quantity_of_joins*4,movie1,cinema1,"title year",5);
         runjoin( quantity_of_joins*5,movie1,cinema1,"title year",5);
+        runjoin( quantity_of_joins*6,movie1,cinema1,"title year",5);
+        runjoin( quantity_of_joins*7,movie1,cinema1,"title year",5);
+        runjoin( quantity_of_joins*8,movie1,cinema1,"title year",5);
+        runjoin( quantity_of_joins*9,movie1,cinema1,"title year",5);
+        runjoin( quantity_of_joins*10,movie1,cinema1,"title year",5);
 
 
 
