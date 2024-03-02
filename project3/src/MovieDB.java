@@ -174,7 +174,7 @@ class MovieDB
         // same as attributes1 and attributes2
 
 
-    //----------------select1 testing by vishal -------------------//
+
 
 
 
@@ -188,9 +188,15 @@ class MovieDB
                 "String Integer Integer String String Integer",
                 "title year",
                 null);
-        var tups   = new int [] { 10000 };//inserting 10000 random values
+        test.addRelSchema("cinema", "title year length genre studioName producerNo",
+                "String Integer Integer String String Integer", "title year",null);
+
+        var tups   = new int [] { 10000,10000 };//inserting 10000 random values
         var resultTest = test.generate (tups);
+
         var movie1 = new Table ("movie", "title year length genre studioName producerNo",
+                "String Integer Integer String String Integer", "title year");
+        var cinema1 = new Table ("cinema", "title year length genre studioName producerNo",
                 "String Integer Integer String String Integer", "title year");
 
         for (var i = 0; i < resultTest.length; i++) {
@@ -201,21 +207,31 @@ class MovieDB
 //                    out.print (resultTest [i][j][k] + ","); //printing the generated random values
                     tempfilm[count++]=resultTest [i][j][k]; //adding the generated random values
                 } // for
-                movie1.insert(tempfilm);
-//                out.println ();
+                if(i==0){
+                    movie1.insert(tempfilm);
+                }
+                if(i==1){
+                    cinema1.insert(tempfilm);
+                }
             } // for
             out.println ();
         } // for
-        var quantity_of_select=10000000;
 
-        runselect( quantity_of_select,movie1,5);
-        runselect( quantity_of_select*2,movie1,5);
-        runselect( quantity_of_select*3,movie1,5);
-        runselect( quantity_of_select*4,movie1,5);
-        runselect( quantity_of_select*5,movie1,5);
+//----------------select1 testing by vishal -------------------//
+        var quantity_of_select=1000000000;
+//        runselect( quantity_of_select,movie1,5);
+//        runselect( quantity_of_select*2,movie1,5);
+//        runselect( quantity_of_select*3,movie1,5);
+//        runselect( quantity_of_select*4,movie1,5);
+//        runselect( quantity_of_select*5,movie1,5);
 
-
-
+//----------------i_join1 testing by vishal -------------------//
+        var quantity_of_joins=10000;
+        runjoin( quantity_of_joins,movie1,cinema1,"title year",5);
+        runjoin( quantity_of_joins*2,movie1,cinema1,"title year",5);
+        runjoin( quantity_of_joins*3,movie1,cinema1,"title year",5);
+        runjoin( quantity_of_joins*4,movie1,cinema1,"title year",5);
+        runjoin( quantity_of_joins*5,movie1,cinema1,"title year",5);
 
 
 
@@ -235,6 +251,23 @@ class MovieDB
         }
        out.println("Time taken in seconds: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
+    public static  void runjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs){
+        double time=0;
 
+        for(int j=0;j<num_of_runs+1;j++){
+            long nano_startTime = System.nanoTime();
+            for(var i=0;i<quantity_of_joins;i++){
+                var temprun = movie1.i_join (JoinKey,JoinKey, cinema1);//command we run
+
+            }
+
+            long nano_endTime = System.nanoTime();
+            if(j>0){
+                time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
+            }
+        }
+
+        out.println("Time taken in seconds: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+    }
 } // MovieDB class
 

@@ -76,7 +76,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.NO_MAP;
+    private static final MapType mType = MapType.HASH_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -127,8 +127,8 @@ public class Table
         attribute = _attribute;
         domain    = _domain;
         key       = _key;
-//        tuples    = new ArrayList <> ();
-        tuples    = new FileList(_name, 300);
+        tuples    = new ArrayList <> ();
+//        tuples    = new FileList(_name, 300);
         index     = makeMap ();
         out.println("Index:"+ index);
     } // constructor
@@ -653,10 +653,10 @@ public class Table
     public Table i_join (String attributes1, String attributes2, Table table2)
     {
         //  T O   B E   I M P L E M E N T E D  - Project 2
-        out.println (STR."RA> \{name}.join (\{attributes1}, \{attributes2}, \{table2.name})");
+//        out.println (STR."RA> \{name}.join (\{attributes1}, \{attributes2}, \{table2.name})");
         var rows    = new ArrayList <Comparable []> ();
         if((mType == MapType.NO_MAP ) ) {
-            out.println("TO DO A IJOIN PLEASE USE A MAP TO USE INDEXING");
+//            out.println("TO DO A IJOIN PLEASE USE A MAP TO USE INDEXING");
             return new Table (name + count++, concat (attribute, table2.attribute),
                     concat (domain, table2.domain), key, rows);
         }
