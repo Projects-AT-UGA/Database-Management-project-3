@@ -218,13 +218,13 @@ class MovieDB
         } // for
 
 //----------------select1 testing by vishal -------------------//
-        var quantity_of_select=1000000000;
-//        runselect( quantity_of_select,movie1,5);
-//        runselect( quantity_of_select*2,movie1,5);
-//        runselect( quantity_of_select*3,movie1,5);
-//        runselect( quantity_of_select*4,movie1,5);
-//        runselect( quantity_of_select*5,movie1,5);
-
+        var quantity_of_select=10000000;
+        runselect( quantity_of_select,movie1,5);
+        runselect( quantity_of_select*2,movie1,5);
+        runselect( quantity_of_select*3,movie1,5);
+        runselect( quantity_of_select*4,movie1,5);
+        runselect( quantity_of_select*5,movie1,5);
+        out.println();
 //----------------i_join1 testing by vishal -------------------//
         var quantity_of_joins=10000;
         runjoin( quantity_of_joins,movie1,cinema1,"title year",5);
@@ -249,7 +249,7 @@ class MovieDB
                 time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
-       out.println("Time taken in seconds: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+       out.println("Average Time taken in seconds for select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
     public static  void runjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs){
         double time=0;
@@ -267,7 +267,7 @@ class MovieDB
             }
         }
 
-        out.println("Time taken in seconds: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        out.println("Average Time taken in seconds for i join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 } // MovieDB class
 
