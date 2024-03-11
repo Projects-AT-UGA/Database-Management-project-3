@@ -4,6 +4,8 @@
  * @author   John Miller
  */
 
+import java.util.ArrayList;
+
 import static java.lang.System.out;
 
 /*****************************************************************************************
@@ -216,40 +218,83 @@ class MovieDB
             } // for
             out.println ();
         } // for
+//        ArrayList<String> select=new ArrayList<>();
+////----------------select1 testing by vishal -------------------//
+//        var quantity_of_select=1000000;
+//        runselect( quantity_of_select,movie1,5,select);
+//        runselect( quantity_of_select*2,movie1,5,select);
+//        runselect( quantity_of_select*3,movie1,5,select);
+//        runselect( quantity_of_select*4,movie1,5,select);
+//        runselect( quantity_of_select*5,movie1,5,select);
+//        runselect( quantity_of_select*6,movie1,5,select);
+//        runselect( quantity_of_select*7,movie1,5,select);
+//        runselect( quantity_of_select*8,movie1,5,select);
+//        runselect( quantity_of_select*9,movie1,5,select);
+//        runselect( quantity_of_select*10,movie1,5,select);
+//
+//
+//        out.println();
+//        out.println(select);
+//        out.println();
+////----------------i_join1 testing by vishal -------------------//
+//        ArrayList<String> joins=new ArrayList<>();
+//        var quantity_of_joins=1000;
+//        runjoin( quantity_of_joins,movie1,cinema1,"title year",5,joins);
+//        runjoin( quantity_of_joins*2,movie1,cinema1,"title year",5,joins);
+//        runjoin( quantity_of_joins*3,movie1,cinema1,"title year",5,joins);
+//        runjoin( quantity_of_joins*4,movie1,cinema1,"title year",5,joins);
+//        runjoin( quantity_of_joins*5,movie1,cinema1,"title year",5,joins);
+//        runjoin( quantity_of_joins*6,movie1,cinema1,"title year",5,joins);
+//        runjoin( quantity_of_joins*7,movie1,cinema1,"title year",5,joins);
+//        runjoin( quantity_of_joins*8,movie1,cinema1,"title year",5,joins);
+//        runjoin( quantity_of_joins*9,movie1,cinema1,"title year",5,joins);
+//        runjoin( quantity_of_joins*10,movie1,cinema1,"title year",5,joins);
+//
+//        out.println();
+//        out.println(joins);
+//        out.println();
 
-//----------------select1 testing by vishal -------------------//
-        var quantity_of_select=10000000;
-        runselect( quantity_of_select,movie1,5);
-        runselect( quantity_of_select*2,movie1,5);
-        runselect( quantity_of_select*3,movie1,5);
-        runselect( quantity_of_select*4,movie1,5);
-        runselect( quantity_of_select*5,movie1,5);
-        runselect( quantity_of_select*6,movie1,5);
-        runselect( quantity_of_select*7,movie1,5);
-        runselect( quantity_of_select*8,movie1,5);
-        runselect( quantity_of_select*9,movie1,5);
-        runselect( quantity_of_select*10,movie1,5);
+//        movie1.print();
+
+
+        ArrayList<String> selectnomap=new ArrayList<>();
+//----------------selectnomap testing by vishal -------------------//
+        var quantity_of_select=1000000;
+        runnomapselect( quantity_of_select,movie1,2,selectnomap);
+        runnomapselect( quantity_of_select*2,movie1,2,selectnomap);
+        runnomapselect( quantity_of_select*3,movie1,2,selectnomap);
+        runnomapselect( quantity_of_select*4,movie1,2,selectnomap);
+        runnomapselect( quantity_of_select*5,movie1,2,selectnomap);
+        runnomapselect( quantity_of_select*6,movie1,2,selectnomap);
+        runnomapselect( quantity_of_select*7,movie1,2,selectnomap);
+        runnomapselect( quantity_of_select*8,movie1,2,selectnomap);
+        runnomapselect( quantity_of_select*9,movie1,2,selectnomap);
+        runnomapselect( quantity_of_select*10,movie1,2,selectnomap);
 
 
         out.println();
-//----------------i_join1 testing by vishal -------------------//
-        var quantity_of_joins=10000;
-        runjoin( quantity_of_joins,movie1,cinema1,"title year",5);
-        runjoin( quantity_of_joins*2,movie1,cinema1,"title year",5);
-        runjoin( quantity_of_joins*3,movie1,cinema1,"title year",5);
-        runjoin( quantity_of_joins*4,movie1,cinema1,"title year",5);
-        runjoin( quantity_of_joins*5,movie1,cinema1,"title year",5);
-        runjoin( quantity_of_joins*6,movie1,cinema1,"title year",5);
-        runjoin( quantity_of_joins*7,movie1,cinema1,"title year",5);
-        runjoin( quantity_of_joins*8,movie1,cinema1,"title year",5);
-        runjoin( quantity_of_joins*9,movie1,cinema1,"title year",5);
-        runjoin( quantity_of_joins*10,movie1,cinema1,"title year",5);
-
-
-
-//        movie1.print();
+        out.println(selectnomap);
+        out.println();
     } // main
-    public static  void runselect(int quantity_of_select,Table movie1,int num_of_runs){
+    public static  void runnomapselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select){
+        double time=0;
+        for(int j=0;j<num_of_runs+1;j++){
+            long nano_startTime = System.nanoTime();
+            for(var i=0;i<quantity_of_select;i++){
+//                var temprun = movie1.select ("title==title781454");//command we run
+                var temprun=movie1.select (t-> t[movie1.col("title")].equals ("title781454"));
+            }
+            long nano_endTime = System.nanoTime();
+            if(j>0){
+
+                time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
+            }
+        }
+        select.add(String.format("%.5f", time/num_of_runs));
+        out.println("Average Time taken in seconds for select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+    }
+
+    public static  void runselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select){
         double time=0;
         for(int j=0;j<num_of_runs+1;j++){
             long nano_startTime = System.nanoTime();
@@ -258,12 +303,14 @@ class MovieDB
             }
             long nano_endTime = System.nanoTime();
             if(j>0){
+
                 time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
+        select.add(String.format("%.5f", time/num_of_runs));
        out.println("Average Time taken in seconds for select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
-    public static  void runjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs){
+    public static  void runjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
         double time=0;
 
         for(int j=0;j<num_of_runs+1;j++){
@@ -278,7 +325,7 @@ class MovieDB
                 time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
-
+        joins.add(String.format("%.5f", time/num_of_runs));
         out.println("Average Time taken in seconds for i join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 } // MovieDB class

@@ -76,7 +76,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.HASH_MAP;
+    private static final MapType mType = MapType.NO_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -230,7 +230,7 @@ public class Table
      */
     public Table select (Predicate <Comparable []> predicate)
     {
-        out.println (STR."RA> \{name}.select (\{predicate})");
+//        out.println (STR."RA> \{name}.select (\{predicate})");
         return new Table (name + count++, attribute, domain, key,
                    tuples.stream ().filter (t -> predicate.test (t))
                                    .collect (Collectors.toList ()));
@@ -279,7 +279,7 @@ public class Table
      */
     public Table select (String condition)
     {
-        out.println (STR."RA> \{name}.select (\{condition})");
+//        out.println (STR."RA> \{name}.select (\{condition})");
 
         List <Comparable []> rows = new ArrayList <> ();
 
