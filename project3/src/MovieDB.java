@@ -180,11 +180,11 @@ class MovieDB
 
 
 
-        var test = new TupleGeneratorImpl ();
+
 
 
 //        out.println ();
-
+        var test = new TupleGeneratorImpl ();
         test.addRelSchema ("movie",
                 "title year length genre studioName producerNo",
                 "String Integer Integer String String Integer",
@@ -222,8 +222,9 @@ class MovieDB
         ArrayList<String> joins=new ArrayList<>();
         ArrayList<String> selectnomap=new ArrayList<>();
         ArrayList<String> nomapjoins=new ArrayList<>();
-        var quantity_of_select=1000000;
-        var quantity_of_joins=100;
+        var quantity_of_select=100000;
+        var quantity_of_joins=10;
+
 ////----------------select testing by vishal -------------------//
 
         for(int i=1;i<=10;i++){
@@ -277,17 +278,16 @@ class MovieDB
         for(int j=0;j<num_of_runs+1;j++){
             long nano_startTime = System.nanoTime();
             for(var i=0;i<quantity_of_select;i++){
-//                var temprun = movie1.select ("title==title781454");//command we run
                 var temprun=movie1.select (t-> t[movie1.col("title")].equals ("title781454"));
             }
             long nano_endTime = System.nanoTime();
             if(j>0){
 
-                time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
+                time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
         select.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in seconds for nomap select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        out.println("Average Time taken in MS seconds for nomap select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 
     public static  void runselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select){
@@ -300,11 +300,11 @@ class MovieDB
             long nano_endTime = System.nanoTime();
             if(j>0){
 
-                time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
+                time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
         select.add(String.format("%.5f", time/num_of_runs));
-       out.println("Average Time taken in seconds for select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+       out.println("Average Time taken in MS seconds for indexed select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
     public static  void runjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
         double time=0;
@@ -318,11 +318,11 @@ class MovieDB
 
             long nano_endTime = System.nanoTime();
             if(j>0){
-                time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
+                time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
         joins.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in seconds for i join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        out.println("Average Time taken in MS seconds for indexed join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 
     public static  void runnomapjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
@@ -336,11 +336,11 @@ class MovieDB
 
             long nano_endTime = System.nanoTime();
             if(j>0){
-                time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
+                time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
         joins.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in seconds for equijoin join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        out.println("Average Time taken in MS seconds for No_MAP join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 } // MovieDB class
 
