@@ -218,63 +218,59 @@ class MovieDB
             } // for
             out.println ();
         } // for
-//        ArrayList<String> select=new ArrayList<>();
-////----------------select1 testing by vishal -------------------//
-//        var quantity_of_select=1000000;
-//        runselect( quantity_of_select,movie1,5,select);
-//        runselect( quantity_of_select*2,movie1,5,select);
-//        runselect( quantity_of_select*3,movie1,5,select);
-//        runselect( quantity_of_select*4,movie1,5,select);
-//        runselect( quantity_of_select*5,movie1,5,select);
-//        runselect( quantity_of_select*6,movie1,5,select);
-//        runselect( quantity_of_select*7,movie1,5,select);
-//        runselect( quantity_of_select*8,movie1,5,select);
-//        runselect( quantity_of_select*9,movie1,5,select);
-//        runselect( quantity_of_select*10,movie1,5,select);
-//
-//
-//        out.println();
-//        out.println(select);
-//        out.println();
-////----------------i_join1 testing by vishal -------------------//
-//        ArrayList<String> joins=new ArrayList<>();
-//        var quantity_of_joins=1000;
-//        runjoin( quantity_of_joins,movie1,cinema1,"title year",5,joins);
-//        runjoin( quantity_of_joins*2,movie1,cinema1,"title year",5,joins);
-//        runjoin( quantity_of_joins*3,movie1,cinema1,"title year",5,joins);
-//        runjoin( quantity_of_joins*4,movie1,cinema1,"title year",5,joins);
-//        runjoin( quantity_of_joins*5,movie1,cinema1,"title year",5,joins);
-//        runjoin( quantity_of_joins*6,movie1,cinema1,"title year",5,joins);
-//        runjoin( quantity_of_joins*7,movie1,cinema1,"title year",5,joins);
-//        runjoin( quantity_of_joins*8,movie1,cinema1,"title year",5,joins);
-//        runjoin( quantity_of_joins*9,movie1,cinema1,"title year",5,joins);
-//        runjoin( quantity_of_joins*10,movie1,cinema1,"title year",5,joins);
-//
-//        out.println();
-//        out.println(joins);
-//        out.println();
-
-//        movie1.print();
-
-
+        ArrayList<String> select=new ArrayList<>();
+        ArrayList<String> joins=new ArrayList<>();
         ArrayList<String> selectnomap=new ArrayList<>();
-//----------------selectnomap testing by vishal -------------------//
+        ArrayList<String> nomapjoins=new ArrayList<>();
         var quantity_of_select=1000000;
-        runnomapselect( quantity_of_select,movie1,2,selectnomap);
-        runnomapselect( quantity_of_select*2,movie1,2,selectnomap);
-        runnomapselect( quantity_of_select*3,movie1,2,selectnomap);
-        runnomapselect( quantity_of_select*4,movie1,2,selectnomap);
-        runnomapselect( quantity_of_select*5,movie1,2,selectnomap);
-        runnomapselect( quantity_of_select*6,movie1,2,selectnomap);
-        runnomapselect( quantity_of_select*7,movie1,2,selectnomap);
-        runnomapselect( quantity_of_select*8,movie1,2,selectnomap);
-        runnomapselect( quantity_of_select*9,movie1,2,selectnomap);
-        runnomapselect( quantity_of_select*10,movie1,2,selectnomap);
+        var quantity_of_joins=100;
+////----------------select testing by vishal -------------------//
 
+        for(int i=1;i<=10;i++){
+            runselect( quantity_of_select*i,movie1,5,select);
+        }
+
+        out.println();
+        out.println(select);
+        out.println();
+//----------------i_join testing by vishal -------------------//
+
+        for(int i=1;i<=10;i++){
+            runjoin( quantity_of_joins*i,movie1,cinema1,"title year",5,joins);
+        }
+
+
+        out.println();
+        out.println(joins);
+        out.println();
+
+
+
+
+
+//----------------select nomap testing by vishal -------------------//
+
+
+        for(int i=1;i<=10;i++){
+            runnomapselect( quantity_of_select*i,movie1,5,selectnomap);
+        }
 
         out.println();
         out.println(selectnomap);
         out.println();
+
+
+        //----------------no_map join testing by vishal -------------------//
+
+
+        for(int i=1;i<=10;i++){
+            runnomapjoin( quantity_of_joins*i,movie1,cinema1,"title",5,nomapjoins);
+        }
+
+        out.println();
+        out.println(nomapjoins);
+        out.println();
+
     } // main
     public static  void runnomapselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select){
         double time=0;
@@ -291,7 +287,7 @@ class MovieDB
             }
         }
         select.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in seconds for select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        out.println("Average Time taken in seconds for nomap select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 
     public static  void runselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select){
@@ -327,6 +323,24 @@ class MovieDB
         }
         joins.add(String.format("%.5f", time/num_of_runs));
         out.println("Average Time taken in seconds for i join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+    }
+
+    public static  void runnomapjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
+        double time=0;
+
+        for(int j=0;j<num_of_runs+1;j++){
+            long nano_startTime = System.nanoTime();
+            for(var i=0;i<quantity_of_joins;i++){
+                var temprun = movie1.join (JoinKey, JoinKey, cinema1);
+            }
+
+            long nano_endTime = System.nanoTime();
+            if(j>0){
+                time+=(nano_endTime - nano_startTime)/1000000000d;//ignore the first iteration due to jit as told in pdf
+            }
+        }
+        joins.add(String.format("%.5f", time/num_of_runs));
+        out.println("Average Time taken in seconds for equijoin join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 } // MovieDB class
 

@@ -76,7 +76,7 @@ public class Table
 
     /** The map type to be used for indices.  Change as needed.
      */
-    private static final MapType mType = MapType.NO_MAP;
+    private static final MapType mType = MapType.HASH_MAP;
 
     /************************************************************************************
      * Make a map (index) given the MapType.
@@ -497,7 +497,7 @@ public class Table
      */
     public Table join (String attributes1, String attributes2, Table table2)
     {
-        out.println (STR."RA> \{name}.join (\{attributes1}, \{attributes2}, \{table2.name})");
+//        out.println (STR."RA> \{name}.join (\{attributes1}, \{attributes2}, \{table2.name})");
 
         var t_attrs = attributes1.split (" ");
         var u_attrs = attributes2.split (" ");
