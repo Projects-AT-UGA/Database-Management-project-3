@@ -165,7 +165,7 @@ public class Table
     {
         this (_name, attributes.split (" "), findClass (domains.split (" ")), _key.split(" "));
 
-        out.println (STR."DDL> create table \{name} (\{attributes})");
+//        out.println (STR."DDL> create table \{name} (\{attributes})");
     } // constructor
 
     //----------------------------------------------------------------------------------

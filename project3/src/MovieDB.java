@@ -216,7 +216,7 @@ class MovieDB
 
 
             var tables = new String [] { "Student", "Professor", "Course", "Teaching"};
-            var size=10000*A;
+            var size=100000*A;
             var tups   = new int [] { size,size,size,size };//inserting 10000 random values
             var resultTest = test.generate (tups);
 
@@ -249,7 +249,7 @@ class MovieDB
                         student.insert(tempfilm);
                         if(j==resultTest [i].length-1){
                             key1=resultTest[0][resultTest[i].length-1][0];
-                            out.println("++++++++++++++++++++++++++"+key1);
+                            out.println("++++++++++++++++++++++++++"+key1+"AA===="+A);
                         }
                     }
                     if(i==1){
@@ -336,12 +336,12 @@ class MovieDB
                 out.println("-------------------"+temprun);
             }
             long nano_endTime = System.nanoTime();
-            if(j>0){
+            if(j>5){
 
                 time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
-        select.add(String.format("%.5f", time/num_of_runs));
+        select.add(String.format("%.5f", time/(num_of_runs-5)));
        out.println("Average Time taken in MS seconds for indexed select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
     public static  void runjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
