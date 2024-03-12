@@ -182,95 +182,132 @@ class MovieDB
 
 
 
-
+        ArrayList<String> selecttimes=new ArrayList<>();
+        ArrayList<String> joinstimes=new ArrayList<>();
+        ArrayList<String> selectnomaptimes=new ArrayList<>();
+        ArrayList<String> nomapjoinstimes=new ArrayList<>();
 //        out.println ();
-        var test = new TupleGeneratorImpl ();
-        test.addRelSchema ("movie",
-                "title year length genre studioName producerNo",
-                "String Integer Integer String String Integer",
-                "title year",
-                null);
-        test.addRelSchema("cinema", "title year length genre studioName producerNo",
-                "String Integer Integer String String Integer", "title year",null);
+        for(int A=1;A<=10;A++){
+            var test = new TupleGeneratorImpl ();
+            test.addRelSchema ("Student",
+                    "id name address status",
+                    "Integer String String String",
+                    "id",
+                    null);
 
-        var tups   = new int [] { 10000,10000 };//inserting 10000 random values
-        var resultTest = test.generate (tups);
+            test.addRelSchema ("Professor",
+                    "id name deptId",
+                    "Integer String String",
+                    "id",
+                    null);
 
-        var movie1 = new Table ("movie", "title year length genre studioName producerNo",
-                "String Integer Integer String String Integer", "title year");
-        var cinema1 = new Table ("cinema", "title year length genre studioName producerNo",
-                "String Integer Integer String String Integer", "title year");
+            test.addRelSchema ("Course",
+                    "crsCode deptId crsName descr",
+                    "String String String String",
+                    "crsCode",
+                    null);
 
-        for (var i = 0; i < resultTest.length; i++) {
-            for (var j = 0; j < resultTest [i].length; j++) {
-                var tempfilm=new Comparable[resultTest [i][j].length];
-                int count=0;
-                for (var k = 0; k < resultTest [i][j].length; k++) {
+            test.addRelSchema ("Teaching",
+                    "crsCode semester profId",
+                    "String String Integer",
+                    "crcCode semester",
+                    new String [][] {{ "profId", "Professor", "id" },
+                            { "crsCode", "Course", "crsCode" }});
+
+
+            var tables = new String [] { "Student", "Professor", "Course", "Teaching"};
+            var size=10000*A;
+            var tups   = new int [] { size,size,size,size };//inserting 10000 random values
+            var resultTest = test.generate (tups);
+
+            var student = new Table ("Student",
+                    "id name address status",
+                    "Integer String String String",
+                    "id");
+            var Professor = new Table ("Professor",
+                    "id name deptId",
+                    "Integer String String",
+                    "id");
+            var Course= new Table("Course",
+                    "crsCode deptId crsName descr",
+                    "String String String String",
+                    "crsCode");
+            var Teaching=new Table("Teaching",
+                    "crsCode semester profId",
+                    "String String Integer",
+                    "crsCode semester") ;
+            Comparable key1=new String();
+            for (var i = 0; i < resultTest.length; i++) {
+                for (var j = 0; j < resultTest [i].length; j++) {
+                    var tempfilm=new Comparable[resultTest [i][j].length];
+                    int count=0;
+                    for (var k = 0; k < resultTest [i][j].length; k++) {
 //                    out.print (resultTest [i][j][k] + ","); //printing the generated random values
-                    tempfilm[count++]=resultTest [i][j][k]; //adding the generated random values
+                        tempfilm[count++]=resultTest [i][j][k]; //adding the generated random values
+                    } // for
+                    if(i==0){
+                        student.insert(tempfilm);
+                        if(j==resultTest [i].length-1){
+                            key1=resultTest[0][resultTest[i].length-1][0];
+                            out.println("++++++++++++++++++++++++++"+key1);
+                        }
+                    }
+                    if(i==1){
+                        Professor.insert(tempfilm);
+                    }
+                    if(i==2){
+                        Course.insert(tempfilm);
+                    }
+                    if(i==3){
+                        Teaching.insert(tempfilm);
+                    }
                 } // for
-                if(i==0){
-                    movie1.insert(tempfilm);
-                }
-                if(i==1){
-                    cinema1.insert(tempfilm);
-                }
+                out.println ();
             } // for
-            out.println ();
-        } // for
-        ArrayList<String> select=new ArrayList<>();
-        ArrayList<String> joins=new ArrayList<>();
-        ArrayList<String> selectnomap=new ArrayList<>();
-        ArrayList<String> nomapjoins=new ArrayList<>();
-        var quantity_of_select=100000;
-        var quantity_of_joins=10;
+
+            var quantity_of_select=1;
+            var quantity_of_joins=1;
 
 ////----------------select testing by vishal -------------------//
+            runselect( quantity_of_select,student,10,selecttimes,key1);
 
-        for(int i=1;i<=10;i++){
-            runselect( quantity_of_select*i,movie1,5,select);
-        }
-
-        out.println();
-        out.println(select);
-        out.println();
 //----------------i_join testing by vishal -------------------//
 
-        for(int i=1;i<=10;i++){
-            runjoin( quantity_of_joins*i,movie1,cinema1,"title year",5,joins);
-        }
+//        for(int i=1;i<=10;i++){
+//            runjoin( quantity_of_joins*i,movie1,cinema1,"title year",5,joinstimes);
+//        }
+//
+//
+
+            //----------------select nomap testing by vishal -------------------//
 
 
-        out.println();
-        out.println(joins);
-        out.println();
+//        for(int i=1;i<=10;i++){
+//            runnomapselect( quantity_of_select*i,movie1,5,selectnomaptimes);
+//        }
+//
 
+            //----------------no_map join testing by vishal -------------------//
 
+//        for(int i=1;i<=10;i++){
+//            runnomapjoin( quantity_of_joins*i,movie1,cinema1,"title",5,nomapjoinstimes);
+//        }
+//
 
-
-
-//----------------select nomap testing by vishal -------------------//
-
-
-        for(int i=1;i<=10;i++){
-            runnomapselect( quantity_of_select*i,movie1,5,selectnomap);
-        }
-
-        out.println();
-        out.println(selectnomap);
-        out.println();
-
-
-        //----------------no_map join testing by vishal -------------------//
-
-
-        for(int i=1;i<=10;i++){
-            runnomapjoin( quantity_of_joins*i,movie1,cinema1,"title",5,nomapjoins);
         }
 
         out.println();
-        out.println(nomapjoins);
+        out.println(selecttimes);
         out.println();
+//        out.println();
+//        out.println(joinstimes);
+//        out.println();
+//        out.println();
+//        out.println(selectnomaptimes);
+//        out.println();
+//        out.println();
+//        out.println(nomapjoinstimes);
+//        out.println();
 
     } // main
     public static  void runnomapselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select){
@@ -290,12 +327,13 @@ class MovieDB
         out.println("Average Time taken in MS seconds for nomap select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 
-    public static  void runselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select){
+    public static  void runselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select,Comparable key){
         double time=0;
         for(int j=0;j<num_of_runs+1;j++){
             long nano_startTime = System.nanoTime();
             for(var i=0;i<quantity_of_select;i++){
-                var temprun = movie1.select (new KeyType ("title781454 567896"));//command we run
+                var temprun = movie1.select (new KeyType (key));//command we run
+                out.println("-------------------"+temprun);
             }
             long nano_endTime = System.nanoTime();
             if(j>0){
