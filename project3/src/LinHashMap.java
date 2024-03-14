@@ -237,11 +237,11 @@ public class LinHashMap <K, V>
         var i    = h (key);                                                  // hash to i-th bucket chain
         var bh   = hTable.get (i);                                           // start with home bucket
         var oldV = find (key, bh, false);                                    // find old value associated with key
-        out.println (STR."LinearHashMap.put: key \{key}, h() = \{i}, value = \{value}");
+//        out.println (STR."LinearHashMap.put: key \{key}, h() = \{i}, value = \{value}");
 
         kCount += 1;                                                         // increment the key count
         var lf = loadFactor ();                                              // compute the load factor
-        if (DEBUG) out.println (STR."put: load factor = \{lf}");
+//        if (DEBUG) out.println (STR."put: load factor = \{lf}");
         if (lf > THRESHOLD) {
             split ();
             i    = h (key);                                                  // hash to i-th bucket chain
@@ -275,7 +275,7 @@ public class LinHashMap <K, V>
      */
     private void split ()
     {
-        out.println ("split: bucket chain " + isplit);
+//        out.println ("split: bucket chain " + isplit);
 
         //  T O   B E   I M P L E M E N T E D
 
@@ -285,7 +285,7 @@ public class LinHashMap <K, V>
         hTable.add(new Bucket());//add a new bucket to end
 
 //        printBucket(currBucketToSplit);
-        out.println();
+//        out.println();
 //        out.println("MOD1="+mod1+" ,,,,MOD2="+ mod2+ " ,,,ISSPLIT="+isplit);
         while(currBucketToSplit!=null){
             for(int i=0;i<currBucketToSplit.keys;i++){

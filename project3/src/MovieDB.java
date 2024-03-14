@@ -187,7 +187,7 @@ class MovieDB
         ArrayList<String> selectnomaptimes=new ArrayList<>();
         ArrayList<String> nomapjoinstimes=new ArrayList<>();
 //        out.println ();
-        for(int A=1;A<=10;A++){
+        for(int RUNS=1;RUNS<=11;RUNS++){
             var test = new TupleGeneratorImpl ();
             test.addRelSchema ("Student",
                     "id name address status",
@@ -216,7 +216,7 @@ class MovieDB
 
 
             var tables = new String [] { "Student", "Professor", "Course", "Teaching"};
-            var size=100000*A;
+            var size=10000*RUNS;
             var tups   = new int [] { size,size,size,size };//inserting 10000 random values
             var resultTest = test.generate (tups);
 
@@ -237,6 +237,7 @@ class MovieDB
                     "String String Integer",
                     "crsCode semester") ;
             Comparable key1=new String();
+            Comparable key2=new String();
             for (var i = 0; i < resultTest.length; i++) {
                 for (var j = 0; j < resultTest [i].length; j++) {
                     var tempfilm=new Comparable[resultTest [i][j].length];
@@ -248,12 +249,16 @@ class MovieDB
                     if(i==0){
                         student.insert(tempfilm);
                         if(j==resultTest [i].length-1){
-                            key1=resultTest[0][resultTest[i].length-1][0];
-                            out.println("++++++++++++++++++++++++++"+key1+"AA===="+A);
+                            key1=resultTest[0][0][0];
+                            out.println("++++++++++++++++++++++++++"+key1+"RUNS===="+RUNS);
                         }
                     }
                     if(i==1){
                         Professor.insert(tempfilm);
+                        if(j==resultTest [i].length-1){
+                            key2=resultTest[0][0][0];
+                            out.println("++++++++++++++++++++++++++"+key1+"RUNS===="+RUNS);
+                        }
                     }
                     if(i==2){
                         Course.insert(tempfilm);
@@ -265,34 +270,33 @@ class MovieDB
                 out.println ();
             } // for
 
-            var quantity_of_select=1;
+            var quantity_of_select=100000000;
+            int num_of_runs=5;
             var quantity_of_joins=1;
 
 ////----------------select testing by vishal -------------------//
-            runselect( quantity_of_select,student,10,selecttimes,key1);
-
+            runselect( student,quantity_of_select,num_of_runs,selecttimes,key1,RUNS);
+            runselect( student,quantity_of_select,num_of_runs,selecttimes,key1,RUNS);
 //----------------i_join testing by vishal -------------------//
 
-//        for(int i=1;i<=10;i++){
+
 //            runjoin( quantity_of_joins*i,movie1,cinema1,"title year",5,joinstimes);
-//        }
+
 //
 //
 
             //----------------select nomap testing by vishal -------------------//
 
 
-//        for(int i=1;i<=10;i++){
+
 //            runnomapselect( quantity_of_select*i,movie1,5,selectnomaptimes);
-//        }
-//
+
 
             //----------------no_map join testing by vishal -------------------//
 
-//        for(int i=1;i<=10;i++){
+
 //            runnomapjoin( quantity_of_joins*i,movie1,cinema1,"title",5,nomapjoinstimes);
-//        }
-//
+
 
         }
 
@@ -318,31 +322,37 @@ class MovieDB
                 var temprun=movie1.select (t-> t[movie1.col("title")].equals ("title781454"));
             }
             long nano_endTime = System.nanoTime();
-            if(j>0){
+            if(j>1){
 
                 time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
-        select.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in MS seconds for nomap select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        select.add(String.format("%.9f", time/num_of_runs));
+        out.println("Average Time taken in nano seconds for nomap select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 
-    public static  void runselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select,Comparable key){
+    public static  void runselect(Table any,int quantity_of_select,int num_of_runs,ArrayList<String> select,Comparable key,int RUN_COUNT){
         double time=0;
-        for(int j=0;j<num_of_runs+1;j++){
+
+        for(int i=0;i<num_of_runs;i++){ //take average of 5 selects
             long nano_startTime = System.nanoTime();
-            for(var i=0;i<quantity_of_select;i++){
-                var temprun = movie1.select (new KeyType (key));//command we run
-                out.println("-------------------"+temprun);
+            for(int j=0;j<quantity_of_select;j++){ //run select a lot of times
+                var temprun = any.select (new KeyType (key));
             }
             long nano_endTime = System.nanoTime();
-            if(j>5){
 
-                time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
-            }
+            time += (nano_endTime - nano_startTime) / quantity_of_select;
+
         }
-        select.add(String.format("%.5f", time/(num_of_runs-5)));
-       out.println("Average Time taken in MS seconds for indexed select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+
+
+
+        out.println("time================"+time);
+        if(RUN_COUNT>0){
+            select.add(String.format("%.5f", time/num_of_runs));
+            out.println("Average Time taken in nano seconds for indexed select: "+String.format("%.5f", time/num_of_runs));
+        }
+
     }
     public static  void runjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
         double time=0;
