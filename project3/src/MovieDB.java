@@ -190,7 +190,7 @@ class MovieDB
 
         ArrayList<String> nomapjoinstimes=new ArrayList<>();
 //        out.println ();
-        for(int RUNS=1;RUNS<=5;RUNS++){
+        for(int RUNS=1;RUNS<=15;RUNS++){
             var test = new TupleGeneratorImpl ();
             test.addRelSchema ("Student",
                     "id name address status",
