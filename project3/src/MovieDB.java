@@ -273,17 +273,19 @@ class MovieDB
                 out.println ();
             } // for
 
-            var quantity_of_select=100000000;
-            int num_of_runs=1;
+            var quantity_of_select_map=100000000;
+            int num_of_runs_map=1;
+            var quantity_of_select_nomap=1000;
+            int num_of_runs_nomap=1;
             var quantity_of_joins=1;
 
 ////----------------select map testing by vishal change map to TREE_MAP, HASH_MAP, LINHASH_MAP, BPTREE_MAP and run different codes -------------------//
-            runselect( student,quantity_of_select,num_of_runs,selecttimes1,key1);
-            runselect( Professor,quantity_of_select,num_of_runs,selecttimes2,key2);
+            runselect( student,quantity_of_select_map,num_of_runs_map,selecttimes1,key1);
+            runselect( Professor,quantity_of_select_map,num_of_runs_map,selecttimes2,key2);
 
             //----------------select nomap testing by vishal -------------------//
-            runnomapselect( quantity_of_select,student,num_of_runs,selectnomaptimes1);
-
+            runnomapselect( quantity_of_select_nomap,student,num_of_runs_nomap,selectnomaptimes1,key1);
+            runnomapselect( quantity_of_select_nomap,Professor,num_of_runs_nomap,selectnomaptimes2,key2);
 
             //----------------i_join testing by vishal -------------------//
 //            runjoin( quantity_of_joins*i,movie1,cinema1,"title year",5,joinstimes);
@@ -298,16 +300,16 @@ class MovieDB
         }
 
         out.println();
-        out.println("time taken for mapped select is"+selecttimes1);
+        out.println("time taken for mapped select is nano seconds "+selecttimes1);
         out.println();
         out.println();
-        out.println("time taken for mapped select is"+selecttimes2);
+        out.println("time taken for mapped select is nano seconds "+selecttimes2);
         out.println();
         out.println();
-        out.println("time taken for mapped select is"+selectnomaptimes1);
+        out.println("time taken for no map select is nano seconds "+selectnomaptimes1);
         out.println();
         out.println();
-        out.println("time taken for mapped select is"+selectnomaptimes2);
+        out.println("time taken for no map select is nano seconds "+selectnomaptimes2);
         out.println();
 
 //        out.println();
@@ -327,6 +329,7 @@ class MovieDB
             long nano_startTime = System.nanoTime();
             for(int j=0;j<quantity_of_select;j++){ //run select a lot of times
                 temprun = anytable.select (new KeyType (key));
+
             }
             long nano_endTime = System.nanoTime();
 
@@ -343,21 +346,20 @@ class MovieDB
 
 
     }
-    public static  void runnomapselect(int quantity_of_select,Table movie1,int num_of_runs,ArrayList<String> select){
+    public static  void runnomapselect(int quantity_of_select,Table anytable,int num_of_runs,ArrayList<String> nomapselect,Comparable key){
         double time=0;
-        for(int j=0;j<num_of_runs+1;j++){
+        var temprun=anytable.select (STR."id == \{key}");
+        for(int j=0;j<num_of_runs;j++){
             long nano_startTime = System.nanoTime();
             for(var i=0;i<quantity_of_select;i++){
-                var temprun=movie1.select (t-> t[movie1.col("title")].equals ("title781454"));
+                 temprun=anytable.select (STR."id == \{key}");
             }
             long nano_endTime = System.nanoTime();
-            if(j>1){
+            time+=(nano_endTime - nano_startTime)/quantity_of_select;//ignore the first iteration due to jit as told in pdf
 
-                time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
-            }
         }
-        select.add(String.format("%.9f", time/num_of_runs));
-        out.println("Average Time taken in nano seconds for nomap select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        nomapselect.add(String.format("%.5f", time/num_of_runs));
+        out.println("Average Time taken in seconds for nomap select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 
 
@@ -377,7 +379,7 @@ class MovieDB
             }
         }
         joins.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in MS seconds for indexed join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        out.println("Average Time taken in seconds seconds for indexed join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 
     public static  void runnomapjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
