@@ -186,7 +186,8 @@ class MovieDB
         ArrayList<String> selecttimes2=new ArrayList<>();
         ArrayList<String> selectnomaptimes1=new ArrayList<>();
         ArrayList<String> selectnomaptimes2=new ArrayList<>();
-        ArrayList<String> joinstimes=new ArrayList<>();
+        ArrayList<String> joinstimes1=new ArrayList<>();
+        ArrayList<String> joinstimes2=new ArrayList<>();
 
         ArrayList<String> nomapjoinstimes=new ArrayList<>();
 //        out.println ();
@@ -217,10 +218,16 @@ class MovieDB
                     new String [][] {{ "profId", "Professor", "id" },
                             { "crsCode", "Course", "crsCode" }});
 
-
-            var tables = new String [] { "Student", "Professor", "Course", "Teaching"};
+            test.addRelSchema("Transcript",
+                    "studId crsCode semester grade",
+                    "Integer String String String",
+                    "studId",//crsCode semester removed them since to join indexes must be same
+                    new String [][] {{ "studId", "Student", "id"},
+                            { "crsCode", "Course", "crsCode" },
+                            { "crsCode semester", "Teaching", "crsCode semester" }});
+            var tables = new String [] { "Student", "Professor", "Course", "Teaching", "Transcript"};
             var size=10000*RUNS;
-            var tups   = new int [] { size,size,size,size };//inserting 10000 random values
+            var tups   = new int [] { size,size,size,size,size };//inserting 10000 random values
             var resultTest = test.generate (tups);
 
             var student = new Table ("Student",
@@ -239,6 +246,11 @@ class MovieDB
                     "crsCode semester profId",
                     "String String Integer",
                     "crsCode semester") ;
+            var Transcript=new Table("Transcript",
+                    "studId crsCode semester grade",
+                    "Integer String String String",
+                    "studId");//crsCode semester removed them since to join indexes must be same
+
             Comparable key1=new String();
             Comparable key2=new String();
             for (var i = 0; i < resultTest.length; i++) {
@@ -277,19 +289,19 @@ class MovieDB
             int num_of_runs_map=1;
             var quantity_of_select_nomap=1000;
             int num_of_runs_nomap=1;
-            var quantity_of_joins=1;
-
+            var quantity_of_joins=500;
+            int num_of_joinruns=1;
 ////----------------select map testing by vishal change map to TREE_MAP, HASH_MAP, LINHASH_MAP, BPTREE_MAP and run different codes -------------------//
-            runselect( student,quantity_of_select_map,num_of_runs_map,selecttimes1,key1);
-            runselect( Professor,quantity_of_select_map,num_of_runs_map,selecttimes2,key2);
+//            runselect( student,quantity_of_select_map,num_of_runs_map,selecttimes1,key1);
+//            runselect( Professor,quantity_of_select_map,num_of_runs_map,selecttimes2,key2);
 
             //----------------select nomap testing by vishal -------------------//
-            runnomapselect( quantity_of_select_nomap,student,num_of_runs_nomap,selectnomaptimes1,key1);
-            runnomapselect( quantity_of_select_nomap,Professor,num_of_runs_nomap,selectnomaptimes2,key2);
+//            runnomapselect( quantity_of_select_nomap,student,num_of_runs_nomap,selectnomaptimes1,key1);
+//            runnomapselect( quantity_of_select_nomap,Professor,num_of_runs_nomap,selectnomaptimes2,key2);
 
             //----------------i_join testing by vishal -------------------//
-//            runjoin( quantity_of_joins*i,movie1,cinema1,"title year",5,joinstimes);
-
+            runjoin( quantity_of_joins,student,Professor,"id","id",num_of_joinruns,joinstimes1);
+            runjoin( quantity_of_joins,student,Transcript,"id","studId",num_of_joinruns,joinstimes2);
 
             //----------------no_map join testing by vishal -------------------//
 
@@ -312,10 +324,12 @@ class MovieDB
         out.println("time taken for no map select is nano seconds "+selectnomaptimes2);
         out.println();
 
-//        out.println();
-//        out.println(joinstimes);
-//        out.println();
-
+        out.println();
+        out.println("time taken for mapped join is milli seconds "+joinstimes1);
+        out.println();
+        out.println();
+        out.println("time taken for mapped join is milli seconds "+joinstimes2);
+        out.println();
 //        out.println();
 //        out.println(nomapjoinstimes);
 //        out.println();
@@ -363,23 +377,23 @@ class MovieDB
     }
 
 
-    public static  void runjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
+    public static  void runjoin(int quantity_of_joins,Table table1,Table table2,String JoinKey1,String JoinKey2,int num_of_runs,ArrayList<String> joins){
         double time=0;
 
         for(int j=0;j<num_of_runs+1;j++){
             long nano_startTime = System.nanoTime();
             for(var i=0;i<quantity_of_joins;i++){
-                var temprun = movie1.i_join (JoinKey,JoinKey, cinema1);//command we run
+                var temprun = table1.i_join (JoinKey1,JoinKey2, table2);//command we run
 
             }
 
             long nano_endTime = System.nanoTime();
             if(j>0){
-                time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
+                time+=((nano_endTime - nano_startTime)/quantity_of_joins)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
         joins.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in seconds seconds for indexed join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        out.println("Average Time taken in milli seconds for indexed join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 
     public static  void runnomapjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
