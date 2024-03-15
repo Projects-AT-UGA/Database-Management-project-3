@@ -567,7 +567,7 @@ public class Table
      */
     public Table join (String condition, Table table2)
     {
-        out.println (STR."RA> \{name}.join (\{condition}, \{table2.name})");
+//        out.println (STR."RA> \{name}.join (\{condition}, \{table2.name})");
 
         var rows = new ArrayList <Comparable []> ();
 

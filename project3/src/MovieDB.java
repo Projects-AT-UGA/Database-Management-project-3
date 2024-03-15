@@ -189,7 +189,8 @@ class MovieDB
         ArrayList<String> joinstimes1=new ArrayList<>();
         ArrayList<String> joinstimes2=new ArrayList<>();
 
-        ArrayList<String> nomapjoinstimes=new ArrayList<>();
+        ArrayList<String> nomapjoinstimes1=new ArrayList<>();
+        ArrayList<String> nomapjoinstimes2=new ArrayList<>();
 //        out.println ();
         for(int RUNS=1;RUNS<=15;RUNS++){
             var test = new TupleGeneratorImpl ();
@@ -265,14 +266,13 @@ class MovieDB
                         student.insert(tempfilm);
                         if(j==resultTest [i].length-1){
                             key1=resultTest[0][0][0];
-                            out.println("++++++++++++++++++++++++++"+key1+"RUNS===="+RUNS);
                         }
                     }
                     if(i==1){
                         Professor.insert(tempfilm);
                         if(j==resultTest [i].length-1){
                             key2=resultTest[1][0][0];
-                            out.println("++++++++++++++++++++++++++"+key1+"RUNS===="+RUNS);
+
                         }
                     }
                     if(i==2){
@@ -281,16 +281,21 @@ class MovieDB
                     if(i==3){
                         Teaching.insert(tempfilm);
                     }
+                    if(i==4){
+                        Transcript.insert(tempfilm);
+                    }
                 } // for
                 out.println ();
             } // for
-
+            out.println("RUNS===="+RUNS);
             var quantity_of_select_map=100000000;
             int num_of_runs_map=1;
             var quantity_of_select_nomap=1000;
             int num_of_runs_nomap=1;
             var quantity_of_joins=500;
             int num_of_joinruns=1;
+            var quantity_of_nomap_joins=10;
+            int num_of_nomap_joinruns=1;
 ////----------------select map testing by vishal change map to TREE_MAP, HASH_MAP, LINHASH_MAP, BPTREE_MAP and run different codes -------------------//
 //            runselect( student,quantity_of_select_map,num_of_runs_map,selecttimes1,key1);
 //            runselect( Professor,quantity_of_select_map,num_of_runs_map,selecttimes2,key2);
@@ -300,23 +305,25 @@ class MovieDB
 //            runnomapselect( quantity_of_select_nomap,Professor,num_of_runs_nomap,selectnomaptimes2,key2);
 
             //----------------i_join testing by vishal -------------------//
-            runjoin( quantity_of_joins,student,Professor,"id","id",num_of_joinruns,joinstimes1);
-            runjoin( quantity_of_joins,student,Transcript,"id","studId",num_of_joinruns,joinstimes2);
+//            runjoin( quantity_of_joins,student,Professor,"id","id",num_of_joinruns,joinstimes1);
+//            runjoin( quantity_of_joins,student,Transcript,"id","studId",num_of_joinruns,joinstimes2);
 
             //----------------no_map join testing by vishal -------------------//
 
-
-//            runnomapjoin( quantity_of_joins*i,movie1,cinema1,"title",5,nomapjoinstimes);
-
+//            runnomapjoin( quantity_of_nomap_joins,student,Professor,"id == id",num_of_nomap_joinruns,nomapjoinstimes1);
+//            runnomapjoin( quantity_of_nomap_joins,student,Transcript,"id == studId",num_of_nomap_joinruns,nomapjoinstimes2);
 
         }
 
+        //------------output of  mapped select---------------------//
         out.println();
         out.println("time taken for mapped select is nano seconds "+selecttimes1);
         out.println();
         out.println();
         out.println("time taken for mapped select is nano seconds "+selecttimes2);
         out.println();
+
+        //------------output of no map select---------------------//
         out.println();
         out.println("time taken for no map select is nano seconds "+selectnomaptimes1);
         out.println();
@@ -324,16 +331,22 @@ class MovieDB
         out.println("time taken for no map select is nano seconds "+selectnomaptimes2);
         out.println();
 
+
+        //------------output of mapped join---------------------//
         out.println();
         out.println("time taken for mapped join is milli seconds "+joinstimes1);
         out.println();
         out.println();
         out.println("time taken for mapped join is milli seconds "+joinstimes2);
         out.println();
-//        out.println();
-//        out.println(nomapjoinstimes);
-//        out.println();
 
+        //------------output of no map join---------------------//
+        out.println();
+        out.println("time taken for no map join is milli seconds "+nomapjoinstimes1);
+        out.println();
+        out.println();
+        out.println("time taken for no map join is milli seconds "+nomapjoinstimes2);
+        out.println();
     } // main
 
     public static  void runselect(Table anytable,int quantity_of_select,int num_of_runs,ArrayList<String> select,Comparable key){
@@ -396,18 +409,17 @@ class MovieDB
         out.println("Average Time taken in milli seconds for indexed join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
     }
 
-    public static  void runnomapjoin(int quantity_of_joins,Table movie1,Table cinema1,String JoinKey,int num_of_runs,ArrayList<String> joins){
+    public static  void runnomapjoin(int quantity_of_joins,Table table1,Table table2,String joincondition,int num_of_runs,ArrayList<String> joins){
         double time=0;
 
         for(int j=0;j<num_of_runs+1;j++){
             long nano_startTime = System.nanoTime();
             for(var i=0;i<quantity_of_joins;i++){
-                var temprun = movie1.join (JoinKey, JoinKey, cinema1);
+                var temprun = table1.join (joincondition, table2);
             }
-
             long nano_endTime = System.nanoTime();
             if(j>0){
-                time+=(nano_endTime - nano_startTime)/1000000d;//ignore the first iteration due to jit as told in pdf
+                time+=((nano_endTime - nano_startTime)/quantity_of_joins)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
         joins.add(String.format("%.5f", time/num_of_runs));
