@@ -192,7 +192,7 @@ class MovieDB
         ArrayList<String> nomapjoinstimes1=new ArrayList<>();
         ArrayList<String> nomapjoinstimes2=new ArrayList<>();
 //        out.println ();
-        for(int RUNS=1;RUNS<=15;RUNS++){
+        for(int RUNS=1;RUNS<=10;RUNS++){
             var test = new TupleGeneratorImpl ();
             test.addRelSchema ("Student",
                     "id name address status",
@@ -297,38 +297,38 @@ class MovieDB
             var quantity_of_nomap_joins=10;
             int num_of_nomap_joinruns=1;
 ////----------------select map testing by vishal change map to TREE_MAP, HASH_MAP, LINHASH_MAP, BPTREE_MAP and run different codes -------------------//
-//            runselect( student,quantity_of_select_map,num_of_runs_map,selecttimes1,key1);
-//            runselect( Professor,quantity_of_select_map,num_of_runs_map,selecttimes2,key2);
+            runselect( student,quantity_of_select_map,num_of_runs_map,selecttimes1,key1);
+            runselect( Professor,quantity_of_select_map,num_of_runs_map,selecttimes2,key2);
 
             //----------------select nomap testing by vishal -------------------//
-//            runnomapselect( quantity_of_select_nomap,student,num_of_runs_nomap,selectnomaptimes1,key1);
-//            runnomapselect( quantity_of_select_nomap,Professor,num_of_runs_nomap,selectnomaptimes2,key2);
+            runnomapselect( quantity_of_select_nomap,student,num_of_runs_nomap,selectnomaptimes1,key1);
+            runnomapselect( quantity_of_select_nomap,Professor,num_of_runs_nomap,selectnomaptimes2,key2);
 
             //----------------i_join testing by vishal -------------------//
-//            runjoin( quantity_of_joins,student,Professor,"id","id",num_of_joinruns,joinstimes1);
-//            runjoin( quantity_of_joins,student,Transcript,"id","studId",num_of_joinruns,joinstimes2);
+            runjoin( quantity_of_joins,student,Professor,"id","id",num_of_joinruns,joinstimes1);
+            runjoin( quantity_of_joins,student,Transcript,"id","studId",num_of_joinruns,joinstimes2);
 
             //----------------no_map join testing by vishal -------------------//
 
-//            runnomapjoin( quantity_of_nomap_joins,student,Professor,"id == id",num_of_nomap_joinruns,nomapjoinstimes1);
-//            runnomapjoin( quantity_of_nomap_joins,student,Transcript,"id == studId",num_of_nomap_joinruns,nomapjoinstimes2);
+            runnomapjoin( quantity_of_nomap_joins,student,Professor,"id == id",num_of_nomap_joinruns,nomapjoinstimes1);
+            runnomapjoin( quantity_of_nomap_joins,student,Transcript,"id == studId",num_of_nomap_joinruns,nomapjoinstimes2);
 
         }
 
         //------------output of  mapped select---------------------//
         out.println();
-        out.println("time taken for mapped select is nano seconds "+selecttimes1);
+        out.println("time taken for mapped select is milli seconds "+selecttimes1);
         out.println();
         out.println();
-        out.println("time taken for mapped select is nano seconds "+selecttimes2);
+        out.println("time taken for mapped select is milli seconds "+selecttimes2);
         out.println();
 
         //------------output of no map select---------------------//
         out.println();
-        out.println("time taken for no map select is nano seconds "+selectnomaptimes1);
+        out.println("time taken for no map select is milli seconds "+selectnomaptimes1);
         out.println();
         out.println();
-        out.println("time taken for no map select is nano seconds "+selectnomaptimes2);
+        out.println("time taken for no map select is milli seconds "+selectnomaptimes2);
         out.println();
 
 
@@ -364,12 +364,8 @@ class MovieDB
 
         }
 
-
-
-        out.println("time================"+time);
-
-            select.add(String.format("%.5f", time/num_of_runs));
-            out.println("Average Time taken in nano seconds for indexed select: "+String.format("%.5f", time/num_of_runs));
+            select.add(String.format("%.9f", (time/num_of_runs)/1000000d));
+            out.println("Average Time taken in milli seconds for indexed select: "+String.format("%.9f", (time/num_of_runs)/1000000d));
 
 
     }
@@ -385,8 +381,8 @@ class MovieDB
             time+=(nano_endTime - nano_startTime)/quantity_of_select;//ignore the first iteration due to jit as told in pdf
 
         }
-        nomapselect.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in seconds for nomap select: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        nomapselect.add(String.format("%.9f", (time/num_of_runs)/1000000d));
+        out.println("Average Time taken in milli seconds for nomap select: "+String.format("%.9f", (time/num_of_runs)/1000000d));//average of five iterations
     }
 
 
@@ -405,8 +401,8 @@ class MovieDB
                 time+=((nano_endTime - nano_startTime)/quantity_of_joins)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
-        joins.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in milli seconds for indexed join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        joins.add(String.format("%.9f", time/num_of_runs));
+        out.println("Average Time taken in milli seconds for indexed join: "+String.format("%.9f", time/num_of_runs));//average of five iterations
     }
 
     public static  void runnomapjoin(int quantity_of_joins,Table table1,Table table2,String joincondition,int num_of_runs,ArrayList<String> joins){
@@ -422,8 +418,8 @@ class MovieDB
                 time+=((nano_endTime - nano_startTime)/quantity_of_joins)/1000000d;//ignore the first iteration due to jit as told in pdf
             }
         }
-        joins.add(String.format("%.5f", time/num_of_runs));
-        out.println("Average Time taken in MS seconds for No_MAP join: "+String.format("%.5f", time/num_of_runs));//average of five iterations
+        joins.add(String.format("%.9f", time/num_of_runs));
+        out.println("Average Time taken in milli seconds for No_MAP join: "+String.format("%.9f", time/num_of_runs));//average of five iterations
     }
 } // MovieDB class
 
