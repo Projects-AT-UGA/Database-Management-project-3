@@ -1,0 +1,34 @@
+Q25. List courses you have the background to TA for: ( include CSCI XXX Course Name).
+Indicate None if applicable. Indicate type of background knowledge or experience.
+
+CSCI 4760,6760 (Computer Networks TA)
+I am well-suited to TA for the Computer Networks course. Having previously taken the course in fall 2023, I possess a strong understanding of various network protocols. My performance on course projects was particularly noteworthy, showcasing my ability to apply theoretical concepts to practical scenarios effectively. This success led the professor to approach me with an invitation to pursue my master's project related to computer networks, which I am currently engaged in. This experience has honed my knowledge and skills in network concepts, making me well-prepared to assist students in comprehending complex topics.
+
+CSCI 4370,6370 (Database Management TA)
+I am well-suited to TA for the Database Management course. This semester, I am excelling in the course, demonstrating a strong understanding of database principles. I have practical experience working with various database systems such as Postgres, MySQL, and MongoDB, both in academic settings and during my employment at Wipro. Through these experiences, I have gained proficiency in database design, querying, and management. My solid grasp of database concepts and practical skills make me confident in my ability to effectively support students in this course as a TA.
+
+CSCI 4470,6470 (Algorithms TA)
+I am well-equipped to TA for the Algorithms course, having excelled in it in fall 2023. I have a strong grasp of both theoretical and practical aspects, having implemented various algorithms in Java multiple times. This background enables me to effectively support students in understanding complex algorithmic concepts and their practical implementations.
+
+CSCI 4300 (Web Development TA)
+I am well-suited to TA for CSCI 4300, which focuses on client-side and server-side techniques for the World Wide Web. With my experience in Node.js, Express.js, and Spring Boot, I have practical knowledge of building interactive, dynamically-generated, and database-enabled web pages. My familiarity with these technologies allows me to contribute effectively to discussions on incorporating new Internet technologies into the course content. I am eager to support students in understanding and implementing modern web development practices.
+
+CSCI 4810 (Interactive Graphics TA)
+I am well-prepared to TA for CSCI 4810/6810, focusing on principles of interactive graphics in two and three dimensions. My experience includes working with JavaScript's Canvas API to create two-dimensional graphics. This background allows me to contribute to discussions on scan conversion algorithms, image data structures, modeling techniques, and visual realism. Additionally, I can assist students in understanding concepts related to data storage/retrieval, compression, and parallel computing for graphics.
+
+CSCI 2720 (Data Structures and Algorithms TA)
+I am well-equipped to TA for CSCI 2720, focusing on data structures and algorithms. With prior implementation experience in stacks, queues, trees, graphs, priority queues, and dictionaries, I offer valuable insights. Additionally, my strong problem-solving skills enable me to assist students with advanced algorithm design strategies, time and space complexity analysis, and sorting and searching techniques.
+
+Other Courses Information:
+I have completed various computer science courses or similar during my undergraduate studies, including:
+
+CSCI 4050,6050: Software Engineering (Completed practical projects in software development lifecycle)
+CSCI 1301: Introduction to Computing and Programming (Completed practical programming assignments)
+CSCI 1300: Introduction to Programming with Python (Implemented various Python programs)
+CSCI 2610: Discrete Mathematics for Computer Science (Applied mathematical concepts to problem-solving)
+CSCI 4730: Operating Systems (Implemented system-level programs and studied practical OS concepts)
+CSCI 3030: Computing, Ethics, and Society (Engaged in practical discussions and ethical case studies)
+CSCI 1302: Software Development (Developed software applications using Java)
+CSCI 1730: Systems Programming (Implemented low-level system programs and utilities)
+CSCI 2150: Introduction to Computational Science 
+I have a strong understanding of the material covered in these courses and have completed practical work, including projects, assignments, and programming tasks, which enhances my ability to assist students in comprehending the material effectively.

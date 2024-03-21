@@ -915,7 +915,10 @@ public class Table
         out.println ("-|");
         for (var tup : tuples) {
             out.print ("| ");
-            for (var attr : tup) out.printf ("%15s", attr);
+            if(tup!=null){
+                for (var attr : tup) out.printf ("%15s", attr);
+            }
+
             out.println (" |");
         } // for
         out.print ("|-");
