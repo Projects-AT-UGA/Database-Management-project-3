@@ -32,7 +32,8 @@ public class TestTupleGenerator
         ArrayList<String> nomapjoinstimes1=new ArrayList<>();
         ArrayList<String> nomapjoinstimes2=new ArrayList<>();
 //        out.println ();
-        for(int RUNS=1;RUNS<=15;RUNS++){
+        ArrayList<Integer> sizearr=new ArrayList<>();
+        for(int RUNS=1;RUNS<=10;RUNS++){
             var test = new TupleGeneratorImpl ();
             test.addRelSchema ("Student",
                     "id name address status",
@@ -68,9 +69,11 @@ public class TestTupleGenerator
                             { "crsCode semester", "Teaching", "crsCode semester" }});
             var tables = new String [] { "Student", "Professor", "Course", "Teaching", "Transcript"};
 
-            out.println("RUNS=========================================="+RUNS);
-            var size=10000*RUNS;
-            out.println("size for this run is======================================"+size);
+            out.println("RUN==============================================================="+RUNS);
+            var size=10000*RUNS; //for join
+//            var size=100000+10000*RUNS;  // for select
+            sizearr.add(size);
+            out.println("size of table for this run is======================================"+size);
             var tups   = new int [] { size,size,size,size,size };//inserting 10000 random values
             var resultTest = test.generate (tups);
 
@@ -120,71 +123,78 @@ public class TestTupleGenerator
                         Transcript.insert(tempfilm);
                     }
                 } // for
-                out.println ();
+//                out.println ();
             } // for
 
 
-            var quantity_of_select_map=1000000;
-            int num_of_runs_map=5;
-            var quantity_of_select_nomap=1000;
-            int num_of_runs_nomap=5;
-            var quantity_of_joins=1000;
-            int num_of_joinruns=5;
-            var quantity_of_nomap_joins=10;
-            int num_of_nomap_joinruns=5;
+            var quantity_of_select_map=1000000; //run select 1000000 times and divide by 1000000 to get more accurate time
+            int num_of_runs_map=5; //average for 5 runs of map select
+
+            var quantity_of_select_nomap=1000; //run select 1000 times and divide by 1000 to get more accurate time
+            int num_of_runs_nomap=5;//average for 5 runs of nomap select
+
+            var quantity_of_joins=1000; //run mapped join 1000 times and divide by 1000 to get more accurate time
+            int num_of_joinruns=5;//average for 5 runs of mapped join
+
+            var quantity_of_nomap_joins=1; //run no map join 1 times and divide by 1 to get more accurate time
+            int num_of_nomap_joinruns=5;//average for 5 runs  nomap join
 
 
 
             ////----------------select map testing by vishal change map to TREE_MAP, HASH_MAP, LINHASH_MAP, BPTREE_MAP and run different codes -------------------//
+            out.println("start of running mapped select+++++++++++++++++++++++++");
             runselect( student,quantity_of_select_map,num_of_runs_map,selecttimes1,resultTest,0);
             runselect( Professor,quantity_of_select_map,num_of_runs_map,selecttimes2,resultTest,1);
-
+            out.println("end of running mapped select+++++++++++++++++++++++++");
+            out.println();
             //----------------select nomap testing by vishal -------------------//
+            out.println("start of running no map select+++++++++++++++++++++++++");
             runnomapselect( quantity_of_select_nomap,student,num_of_runs_nomap,selectnomaptimes1,resultTest,0);
             runnomapselect( quantity_of_select_nomap,Professor,num_of_runs_nomap,selectnomaptimes2,resultTest,1);
-
+            out.println("end of running no map select+++++++++++++++++++++++++");
+            out.println();
             //----------------i_join testing by vishal -------------------//
-//            runjoin( quantity_of_joins,Teaching,Course,"crsCode","crsCode",num_of_joinruns,joinstimes1);
-//            runjoin( quantity_of_joins,student,Transcript,"id","studId",num_of_joinruns,joinstimes2);
-
+            out.println("start of running mapped join+++++++++++++++++++++++++");
+            runjoin( quantity_of_joins,Teaching,Course,"crsCode","crsCode",num_of_joinruns,joinstimes1);
+            runjoin( quantity_of_joins,student,Transcript,"id","studId",num_of_joinruns,joinstimes2);
+            out.println("end of running mapped join+++++++++++++++++++++++++");
+            out.println();
             //----------------no_map join testing by vishal -------------------//
-
+            out.println("start of running no map join+++++++++++++++++++++++++");
             runnomapjoin( quantity_of_nomap_joins,Teaching,Course,"crsCode == crsCode",num_of_nomap_joinruns,nomapjoinstimes1);
             runnomapjoin( quantity_of_nomap_joins,student,Transcript,"id == studId",num_of_nomap_joinruns,nomapjoinstimes2);
-
+            out.println("end of running no map join+++++++++++++++++++++++++");
+            out.println();
         }
 
         //------------output of  mapped select---------------------//
         out.println();
+        out.println("size is                                    "+sizearr);
         out.println("time taken for mapped select is milli seconds "+selecttimes1);
-        out.println();
-        out.println();
         out.println("time taken for mapped select is milli seconds "+selecttimes2);
         out.println();
-
+        out.println();
         //------------output of no map select---------------------//
         out.println();
+        out.println("size is                                    "+sizearr);
         out.println("time taken for no map select is milli seconds "+selectnomaptimes1);
-        out.println();
-        out.println();
         out.println("time taken for no map select is milli seconds "+selectnomaptimes2);
         out.println();
-
+        out.println();
 
         //------------output of mapped join---------------------//
         out.println();
+        out.println("size is                                    "+sizearr);
         out.println("time taken for mapped join is milli seconds "+joinstimes1);
-        out.println();
-        out.println();
         out.println("time taken for mapped join is milli seconds "+joinstimes2);
         out.println();
-
+        out.println();
         //------------output of no map join---------------------//
         out.println();
+        out.println("size is                                    "+sizearr);
         out.println("time taken for no map join is milli seconds "+nomapjoinstimes1);
-        out.println();
-        out.println();
         out.println("time taken for no map join is milli seconds "+nomapjoinstimes2);
+        out.println();
         out.println();
     } // main
 
@@ -193,11 +203,11 @@ public class TestTupleGenerator
         for(int i=0;i<num_of_runs+1;i++){ //take average of 5 selects
             long nano_startTime = System.nanoTime();
             for(int j=0;j<quantity_of_select;j++){ //run select a lot of times
-                var table=anytable.select (new KeyType (resultTest[tablenum][(int)Math.floor(resultTest [0].length*Math.random())][0]));
+                var table=anytable.select (new KeyType (resultTest[tablenum][(int)Math.floor(resultTest [0].length*Math.random())][0]));//giving select random keys
             }
             long nano_endTime = System.nanoTime();
             if(i>0){
-                time += (nano_endTime - nano_startTime) / quantity_of_select;
+                time += (nano_endTime - nano_startTime) / quantity_of_select;//ignore the first iteration due to jit as told in pdf
             }
         }
 
@@ -211,7 +221,7 @@ public class TestTupleGenerator
         for(int j=0;j<num_of_runs+1;j++){
             long nano_startTime = System.nanoTime();
             for(var i=0;i<quantity_of_select;i++){
-                anytable.select (STR."id == \{resultTest[tablenum][(int)Math.floor(resultTest [0].length*Math.random())][0]}");
+                anytable.select (STR."id == \{resultTest[tablenum][(int)Math.floor(resultTest [0].length*Math.random())][0]}"); //giving select random keys
             }
             long nano_endTime = System.nanoTime();
 
@@ -229,7 +239,7 @@ public class TestTupleGenerator
         for(int j=0;j<num_of_runs+1;j++){
             long nano_startTime = System.nanoTime();
             for(var i=0;i<quantity_of_joins;i++){
-                var temprun = table1.i_join (JoinKey1,JoinKey2, table2);//command we run
+                var temprun = table1.i_join (JoinKey1,JoinKey2, table2);
             }
 
             long nano_endTime = System.nanoTime();
